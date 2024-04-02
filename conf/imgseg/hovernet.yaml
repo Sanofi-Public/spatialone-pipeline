@@ -1,0 +1,56 @@
+imgseg.hovernet:
+  params:
+    gpu: '0' # TODO: look into gpu setting? since data_hovernet only runs with gpu
+    nr_types: 5
+    batch_size: 16
+    model_mode: "original"
+    nr_inference_workers: 1
+    nr_post_proc_workers: 1
+    wsi: True
+    tile: False
+    help: False
+    model_name: "hovernet_original_consep_type_tf2pytorch.tar" # can be replaced with custom model
+    type_filename: "type_info.json" # can be replaced with custom labels
+  deployment:
+    predict_url: "http://hovernet:80/predict"
+  wsi:
+    proc_mag: 40
+    ambiguous_size: 128
+    chunk_shape: 10000
+    tile_shape: 2048
+    save_thumb: True
+    save_mask: True
+  tile:
+    mem_usage: 0.2
+    draw_dot: False
+    save_qupath: False
+    save_raw_map: False
+  hovernet:
+    hovernet_original_consep_type_tf2pytorch:
+      bucket: "prep"
+      extension: "tar"
+    type_info:
+      bucket: "prep"
+      extension: "json"
+  hovernet-pushdata-unittest:
+    test_push_file:
+      bucket: "prep"
+      extension: "csv"
+  unittest:
+    unit_test_image:
+      bucket: "prep"
+      extension: "tif"
+  inputs:
+    wsi: # do we want to change the file names?
+      bucket: "prep"
+      extension: "tif"
+  outputs:
+    hovernet_cell_segmentation_full:
+      bucket: "results"
+      extension: "npy"
+    hovernet_cell_type_df:
+      bucket: "results"
+      extension: "csv"
+    hovernet_cells_layer:
+      bucket: "results"
+      extension: "png"

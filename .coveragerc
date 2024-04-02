@@ -1,0 +1,16 @@
+
+[run]
+omit =
+    src/image_analysis/**
+    src/pipelines/**
+    src/utils/data_loader.py
+    src/utils/data_saver.py
+    src/utils/image_processing_utils.py
+    src/utils/model_loader.py
+    src/utils/env_variables.py
+    src/utils/tmap_generator.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == "__main__":

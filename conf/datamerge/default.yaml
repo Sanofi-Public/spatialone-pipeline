@@ -1,0 +1,165 @@
+datamerge.default:
+  ## TODO: need to add default params here that are not overwritten unless specified
+  params:
+    annotation_file: "annotations.geojson"
+    spot_index: "barcode"
+    cell_index: "cell_ids"
+    target_genes: []
+    n_top_expressed_genes: 500      # Forces to include the top 500 most expressed genes in the reporting
+    n_top_variability_genes: 500    # Forces to include the top 500 genes with highest variability in the reporting
+  unittest:
+    cell2location_results:
+      bucket: "prep"
+      extension: "csv"
+    starch_results:
+      bucket: "prep"
+      extension: "csv"
+    cells_df:
+      bucket: "prep"
+      extension: "csv"
+    spots_df:
+      bucket: "prep"
+      extension: "csv"
+    morphological_clusters:
+      bucket: "prep"
+      extension: "csv"
+    spot_clusters:
+      bucket: "prep"
+      extension: "csv"
+    spot_qc:
+      bucket: "prep"
+      extension: "csv"
+    gene_qc:
+      bucket: "prep"
+      extension: "csv"
+    overall_qc:
+      bucket: "prep"
+      extension: "csv"
+    gene_graph_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_10_clusters:
+      bucket: "prep"
+      extension: "csv"
+    raw_feature_bc_matrix:
+      bucket: "prep"
+      extension: "h5"
+    tsne_projection:
+      bucket: "prep"
+      extension: "csv"
+    umap_projection:
+      bucket: "prep"
+      extension: "csv"
+    tissue_lowres_image:
+      bucket: "prep"
+      extension: "png"
+    tissue_positions_list:
+      bucket: "prep"
+      extension: "csv"
+  inputs:
+    cell2location_results:
+      bucket: "results"
+      extension: "csv"
+    card_results:
+      bucket: "results"
+      extension: "csv"
+    cells_df:
+      bucket: "results"
+      extension: "csv"
+    spots_df:
+      bucket: "results"
+      extension: "csv"
+    morphological_clusters:
+      bucket: "results"
+      extension: "csv"
+    spot_clusters:
+      bucket: "results"
+      extension: "csv"
+    spot_qc:
+      bucket: "results"
+      extension: "csv"
+    gene_qc:
+      bucket: "results"
+      extension: "csv"
+    overall_qc:
+      bucket: "results"
+      extension: "csv"
+    gene_graph_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_2_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_3_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_4_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_5_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_6_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_7_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_8_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_9_clusters:
+      bucket: "prep"
+      extension: "csv"
+    kmeans_10_clusters:
+      bucket: "prep"
+      extension: "csv"
+    raw_feature_bc_matrix:
+      bucket: "prep"
+      extension: "h5"
+    tsne_projection:
+      bucket: "prep"
+      extension: "csv"
+    umap_projection:
+      bucket: "prep"
+      extension: "csv"
+    tissue_lowres_image:
+      bucket: "prep"
+      extension: "png"
+    tissue_positions_list:
+      bucket: "prep"
+      extension: "csv"
+    wsi: # do we want to change the file names?
+      bucket: "prep"
+      extension: "tif"
+    annotations:
+      bucket: "prep"
+      extension: "geojson"
+  outputs:
+    cells_adata:
+      bucket: "results"
+      extension: "h5"
+    spots_adata:
+      bucket: "results"
+      extension: "h5"
+    merged_cells_df:
+      bucket: "results"
+      extension: "csv"
+    merged_spots_df:
+      bucket: "results"
+      extension: "csv"
+    cells_layer:
+      bucket: "results"
+      extension: "png"
+    spots_layer:
+      bucket: "results"
+      extension: "png"
+    tissue_lowres_image: # renamed from wsi_thumbnail
+      bucket: "results"
+      extension: "png"
+    run_configs:
+      bucket: "results"
+      extension: "json"
+    raw_feature_bc_matrix:
+      bucket: "results"
+      extension: "h5"

@@ -1,0 +1,35 @@
+imgseg.cellpose:
+  params:
+    patch_size: 512
+    overlap: 496
+    downsample_factor: 2
+    n_channels: 3
+    channels: [0,0,0]
+    model_type: "nuclei"
+    batch_size: 100
+    diameter: 0
+    flow_threshold: 0.4
+  unittest:
+    unit_test_image:
+      bucket: "prep"
+      extension: "npy"
+    unit_test_image_patched:
+      bucket: "prep"
+      extension: "npy"
+    unit_test_seg:
+      bucket: "prep"
+      extension: "npy"
+  inputs:
+    wsi: # do we want to change the file names?
+      bucket: "prep"
+      extension: "tif"
+    tissue_positions_list:
+      bucket: "prep"
+      extension: "csv"
+  outputs:
+    cellpose_cell_segmentation_crop:
+      bucket: "results"
+      extension: "npy"
+    cellpose_cell_segmentation_full:
+      bucket: "results"
+      extension: "npy"

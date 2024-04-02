@@ -1,0 +1,246 @@
+spatialanalysis.default:
+  params:
+    cell_cluster_key: "cell type"
+    non_deconv_label: "not deconvolved"
+    morans_save_path: "{marker}-morans-{i}.png"
+    region_report_name: "{report_name}_report.html"
+    tissue:
+      # Report Contents
+      cell_summary: True #plot cell summary
+      cell_counts: True #plot cell counts
+      cell_per_spot: True #plot cell per spot
+      spot_avg_gene_counts: True #plot average gene counts
+      cell_net_matrix: True #plot cell neighborhood enrichment matrix
+      cell_net_chord: True #plot cell neighborhood enrichment chord plot
+      cell_cooccur: True #plot cell cooccurrence analysis
+      morans_gene_heatmap: True #plot moran's I on spots data
+      morans_gene_bar: True #plot moran's I on spots data using bar plots
+      morans_cell_heatmap: True #plot moran's I on cell data
+      morans_cell_bar: True #plot moran's I on cell data using bar plots
+      spot_diff_exp: True #plot gene expression comparative analysis
+      diff_exp_annotations: True #plot gene comparative analysis on user annotations
+      diff_exp_clusters: True #plot gene comparative analysis on gene clusters
+      qc_report: True #Include QC section
+      infilt_comparing_cell_types: False #plot infiltration analysis as abundance vs cell types - *Should always be false for tissue analysis*
+      infilt_comparing_levels: False #plot infiltration analysis as abundance vs level - *Should always be false for tissue analysis*
+      # Test Parameters
+      n_neighs: 6 #number of neighboring tiles when coord_type is "grid". Number of neighborhoods for non-grid data when coord_type is "generic"
+      n_rings: 2 #number of rings of neighbors for grid data.
+      n_intervals: 60 #distances interval at which co-occurrence is computed.
+      n_splits: 1 #number of splits in which to divide the spatial coordinates for co-occurence analysis. #s >1 break the flow.
+      chord_n_cells: 5 #minumum number of cell types required to generate chord plot
+      n_perms: 100 #number of permutations for Moran's I
+      n_cols: 5 #number of columns in grid of Moran plots
+      moran_pval: 0.05 #significance level to use for Moran's I
+      n_genes_exp: 10 #number of top n genes to visualize after Moran's analysis
+      n_genes_bar: 100 #number of top n genes to visiualize on Moran's I bar plot
+      n_cells_neighbors: 4 #minimum number of cells to build a neighbors graph
+      net_cutoff: 0.0001 #cut off for considering an interaction from neighborhood enrichment analysis
+      diff_pval: 0.05 #significance level to use for gene comparative analysis
+      diff_fc_thresh: 3 #fold change threshold to use for gene comparative analysis
+      infilt_levels: 4 #number of levels to consider for infiltration analysis
+      # Plotting Parameters
+      plot_width: 1200 #plot widths
+      plot_height: 650 #plot heights
+      color_discrete_map: {
+        "upregulated": "blue",
+        "not significant": "rgb(287, 187, 51)",
+        "downregulated": "red",
+        "infiltrating": "red",
+        "not infiltrating": "blue"}
+    region:
+      # Report Contents
+      cell_summary: True #plot cell summary
+      cell_counts: True #plot cell counts
+      cell_per_spot: True #plot cell per spot
+      spot_avg_gene_counts: True #plot average gene counts
+      cell_net_matrix: True #plot cell neighborhood enrichment matrix
+      cell_net_chord: True #plot cell neighborhood enrichment chord plot
+      cell_cooccur: True #plot cell cooccurrence analysis
+      morans_gene_heatmap: True #plot moran's I on spots data
+      morans_gene_bar: True #plot moran's I on spots data using bar plots
+      morans_cell_heatmap: False #plot moran's I on cell data - *Should always be false for region analysis*
+      morans_cell_bar: False #plot moran's I on cell data using bar plots - *Should always be false for region analysis*
+      spot_diff_exp: False #plot gene expression comparative analysis  - *Should always be false for region analysis*
+      diff_exp_annotations: False #plot gene comparative analysis on user annotations - *Should always be false for region analysis*
+      diff_exp_clusters: False #plot gene comparative analysis on gene clusters - *Should always be false for region analysis*
+      qc_report: False #Include QC section - *Should always be false for region analysis*
+      infilt_comparing_cell_types: True #plot infiltration analysis as abundance vs cell types
+      infilt_comparing_levels: True #plot comparison of cell type abundance as a function of distance to boundary
+      # Test Parameters
+      n_neighs: 6 #number of neighboring tiles when coord_type is "grid". Number of neighborhoods for non-grid data when coord_type is "generic"
+      n_rings: 2 #number of rings of neighbors for grid data.
+      n_intervals: 60 #distances interval at which co-occurrence is computed.
+      n_splits: 1 #number of splits in which to divide the spatial coordinates for co-occurence analysis. #s >1 break the flow.
+      chord_n_cells: 5 #minumum number of cell types required to generate chord plot
+      n_perms: 100 #number of permutations for Moran's I
+      n_cols: 5 #number of columns in grid of Moran plots
+      moran_pval: 0.05 #significance level to use for Moran's I
+      n_genes_exp: 10 #number of top n genes to visualize after Moran's analysis
+      n_genes_bar: 100 #number of top n genes to visiualize on Moran's I bar plot
+      n_cells_neighbors: 4 #minimum number of cells to build a neighbors graph
+      net_cutoff: 0.0001 #cut off for considering an interaction from neighborhood enrichment analysis
+      diff_pval: 0.05 #significance level to use for gene comparative analysis
+      diff_fc_thresh: 3 #fold change threshold to use for gene comparative analysis
+      infilt_levels: 4 #number of levels to consider for infiltration analysis
+      # Plotting Parameters
+      plot_width: 1200 #plot widths
+      plot_height: 650 #plot heights
+      color_discrete_map: {
+        "upregulated": "blue",
+        "not significant": "rgb(287, 187, 51)",
+        "downregulated": "red",
+        "infiltrating": "red",
+        "not infiltrating": "blue"}
+    fig_configs:
+      cell_summary:
+        title: "Cell Summary Statistics"
+        description: "Summary of the different cell types that were deconvolved in the sample and their statistics
+        within the Visium spots."
+      cell_counts:
+        title: "Cell Counts"
+        description: "Number of cells by cell type."
+      cell_per_spot:
+        title: "Cells Per Spot"
+        description: "Plotting the spread of cell types within Visium spots."
+      spot_avg_gene_counts:
+        title: "Average Gene Expression"
+        description: "Average gene counts across all Visium spots containing tissue."
+      cell_net_matrix:
+        title: "Neighborhood Enrichment Analysis - Z-Score Clustergram"
+        description: "Neighborhood enrichment clustergram of Z-scores. This test helps to identify cell types that
+          have a similar neighborhood structure within a given tissue. The test accomplishes this by
+          comparing the number of connections between two cell types in a graph to a random permutation
+          of objects. If two distinct cell types are found in close proximity to each other, the test
+          assigns a high Z-score, indicating that the cell types are enriched. Conversely, if the
+          two cell types are far apart, the test assigns a low Z-score, indicating that they are
+          depleted."
+      cell_net_chord:
+        title: "Neighborhood Enrichment Analysis - Chord Plot"
+        description: "Displaying the results of neighborhood enrichment analysis as a chord plot. Select a
+          cell type to view the associated chords. Each chord represents the interaction between
+          two cell types, and the width of the chord indicates the strength of the enrichment or
+          depletion of the neighborhood between those cell types."
+      morans_gene_heatmap:
+        title: "Moran's I Analysis - Expression Patterns of Top Clustered Genes"
+        description: "Moran's Index quantifies spatial autocorrelation in gene expression among nearby spots and provides insights into the
+          spatial patterns of the data. Specifically, it can be used to determine whether genes are
+          clustered, dispersed, or randomly expressed in the tissue being studied. Here, the expression of the top genes are presented."
+      morans_gene_bar:
+        title: "Moran's I Analysis - Moran's Index for Top Clustered Genes"
+        description: "Plotting Moran's Index for the top genes."
+      morans_cell_heatmap:
+        title: "Moran's I Analysis - Proportion of Top Clustered Cell Types within Visium Spots"
+        description: "Moran's Index quantifies spatial autocorrelation in number of cell types among nearby spots and provides insights into the
+          spatial patterns of the data. Specifically, it can be used to determine whether cell types are
+          clustered, dispersed, or randomly expressed in the tissue being studied. Here, the proportion of the cell types within Visium spots is presented."
+      morans_cell_bar:
+        title: "Moran's I Analysis - Moran's Index for Top Clustered Cell Types"
+        description: "Plotting Moran's Index for the top cell types."
+      cell_cooccur:
+        title: "Co-occurrence Analysis"
+        description: "This test calculates a co-occurrence score by analyzing cells' distribution in
+        increasing radii around each observed cell in the tissue, identifying cell types that
+        typically co-occur. It differs from neighborhood enrichment by not using cell connectivity
+          but cells' proximity within a radial distance. Please select the target cell type from the dropdown menu."
+      diff_exp_annotations:
+        title: "Comparative Gene Analysis - Comparing User Annotations"
+        select_message: "Select the regions you would like to compare: "
+        description: "Comparing gene expression between two region types, (region A)-(region B).
+          This analysis tests if the gene expressions are different between the regions by running a
+          two-sample t-test and a Mann-Whitney test with Benjamin-Hochberg correction. A gene is
+          significantly different if the p-value from the t-test and Mann-Whitney test are both less
+          than the threshold (0.05). A gene is considered upregulated or downregulated in (region A) based
+          on the fold change. Blue: Upregulated in Region A, Red: Down-regulated in Region A, Yellow: Not significant."
+      diff_exp_clusters:
+        title: "Comparative Gene Analysis - Comparing Gene Clusters"
+        select_message: "Select the clusters you would like to compare: "
+        description: "Comparing gene expression between two clusters of spots, (Cluster A)-(Cluster B). Note: Gene expression
+          clustering is used as input to this test.
+          This analysis tests if the gene expressions are different between the regions by running a
+          two-sample t-test and a Mann-Whitney test with Benjamin-Hochberg correction. A gene is
+          significantly different if the p-value from the t-test and Mann-Whitney test are both less
+          than the threshold (0.05). A gene is considered upregulated or downregulated in (Cluster A)  based on the fold change.
+          Blue: Upregulated in Cluster A, Red: Down-regulated in Cluster A, Yellow: Not significant."
+      qc_report:
+        title: "SpaceRanger QC Report"
+        description: "The following button re-directs to the SpaceRanger provided QC report:"
+      infilt_comparing_cell_types:
+        title: "Infiltration Analysis - Comparing Abundance of Different Cell Types"
+        select_message: "Select the distance from the boundary you would like to study: "
+        description: "Comparing the abundance of the various cell types at a given distance from the region boundary. This analysis
+        first identifies the cells that lie within the selected distance range. The cells are then grouped by type and counted.
+        Red-colored cell types have proportions significantly different inside the region compared to outside of the region."
+      infilt_comparing_levels:
+        title: "Infiltration Analysis - Comparing Proportion of Cell Types as a Function of Distance"
+        select_message: "Select the cell type you would like to study: "
+        description: "Analyzing the proportion of a given cell type as a function of distance away from the region boundary. This analysis
+        first groups the cells based on the distance. The cell proportions are then computed at each distance level and aggregated for
+        each cell type to display in the plots below. The dashed line represents the region boundary. The symbol '*' indicates cell types
+        that have proportions significantly different inside the region compared to outside of the region, according to a z-test for proportions.
+        Positive distance = distance away from the boundary. Negative distance = distance inside the boundary.
+        Cells in the gray region are excluded from the infiltration computation."
+  tissuumap_templates:
+    report_template:
+      bucket: "prep"
+      extension: "html"
+  unittest:
+    merged_cells_df:
+      bucket: "prep"
+      extension: "csv"
+    merged_spots_df:
+      bucket: "prep"
+      extension: "csv"
+    tissue_lowres_image:
+      bucket: "prep"
+      extension: "png"
+    tissue_hires_image:
+      bucket: "prep"
+      extension: "png"
+    scalefactors_json:
+      bucket: "prep"
+      extension: "json"
+    report_template:
+      bucket: "prep"
+      extension: "html"
+    annotations:
+      bucket: "prep"
+      extension: "geojson"
+  inputs:
+    merged_cells_df:
+      bucket: "results"
+      extension: "csv"
+    merged_spots_df:
+      bucket: "results"
+      extension: "csv"
+    tissue_lowres_image:
+      bucket: "prep"
+      extension: "png"
+    tissue_hires_image:
+      bucket: "prep"
+      extension: "png"
+    scalefactors_json:
+      bucket: "prep"
+      extension: "json"
+    web_summary:
+      bucket: "prep"
+      extension: "html"
+    annotations:
+      bucket: "prep"
+      extension: "geojson"
+  outputs:
+    report:
+      bucket: "results"
+      extension: "html"
+    cells_adata:
+      bucket: "results"
+      extension: "h5ad"
+    spots_adata:
+      bucket: "results"
+      extension: "h5ad"
+    web_summary:
+      bucket: "results"
+      extension: "html"
+    run_configs:
+      bucket: "results"
+      extension: "json"

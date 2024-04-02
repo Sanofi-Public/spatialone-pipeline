@@ -1,0 +1,5 @@
+# WIP (default values set)
+defaults:
+  - image_seg: hovernet
+  - storage: data_io
+#-------------------------

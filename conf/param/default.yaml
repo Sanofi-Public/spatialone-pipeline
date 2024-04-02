@@ -1,0 +1,9 @@
+param.default:
+  unittest:
+    parameters:
+      bucket: "prep"
+      extension: "csv"
+  inputs:
+    parameters:
+      bucket: "prep"
+      extension: "csv"

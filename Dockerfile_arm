@@ -1,0 +1,66 @@
+# Use Ubuntu 22.04 with ARM64 architecture
+FROM --platform=linux/arm64 ubuntu:22.04
+
+# Set environment variables to non-interactive to avoid prompts during build
+ARG NO_PROXY
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ENV NO_PROXY=${NO_PROXY}
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
+ENV http_proxy=${HTTP_PROXY}
+ENV https_proxy=${HTTPS_PROXY}
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/archives/lock && rm -rf /var/lib/dpkg/lock \
+    && apt-get update \
+    # && apt-get install libatlas-base-dev liblapack-dev libblas-dev -y \
+    && apt-get install -y python3.10 python3.10-venv python3.10-dev \
+    && apt-get install -y python3-pip
+
+# Update pip to the latest version using Python 3.10
+RUN python3.10 -m pip install --upgrade pip
+
+# Optionally, set Python 3.10 as the default Python version
+# This makes `python` and `pip` commands point to Python 3.10 versions
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 && \
+    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 100
+ENV PYTHONPATH "${PYTHONPATH}:/my/custom/path"
+
+#Set the working directory to "/app" in the Docker container
+WORKDIR /app
+# Set directory for /data to access conf/,prep/,results/,reference/ data from external volume
+RUN mkdir /data
+
+### This block is to update GDAL, which is too old in Ubuntu 20.04 ARM
+# Install necessary packages for Miniforge installation
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+# Download and Install Miniforge for ARM64 architecture
+RUN wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -O /miniforge.sh \
+    && bash /miniforge.sh -b -p /miniconda \
+    && rm /miniforge.sh
+# Add Miniconda (Miniforge) to PATH
+ENV PATH="/miniconda/bin:${PATH}"
+# Update Conda and Install GDAL from the conda-forge channel
+RUN conda update -n base -c defaults conda
+RUN conda install -c conda-forge gdal
+
+# Install any dependencies
+COPY requirements-arm.txt /app/
+COPY Makefile /app/
+COPY .env /app/
+COPY src/ /app/src/
+COPY conf/ /app/conf/
+COPY logging.yml /app/
+COPY templates/ /app/templates/
+RUN make install-arm
+RUN pip install numpy --upgrade --user
+RUN pip install numba --upgrade --user
+
+# Expose port 80 for the application
+EXPOSE 80
+
+# Command to run the application
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+CMD ["python3", "-m", "src.pipelines.visium_flow", "run"]

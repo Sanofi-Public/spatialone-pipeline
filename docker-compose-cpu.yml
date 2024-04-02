@@ -1,0 +1,54 @@
+version: '3'
+services:
+  spatialone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - HTTP_PROXY=${HTTP_PROXY}
+
+    platform: linux/amd64
+    volumes:
+      - ${HOST_DATA_PATH}:/app/data
+      #- shared-data:/app/data
+    networks:
+      - shared-network
+
+  card:
+    build:
+      context: ./models/card
+      dockerfile: Dockerfile_card
+      args:
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - HTTP_PROXY=${HTTP_PROXY}
+    platform: linux/amd64
+    volumes:
+      - ${HOST_DATA_PATH}:/app/data
+      #- shared-data:/app/data
+    ports:
+      - "81:80"
+      # to reach the api from spatialone run curl http://card:80/test --noproxy "*"
+    networks:
+      - shared-network
+
+  hovernet:
+    build:
+      context: ./models/hovernet
+      dockerfile: Dockerfile_hovernet
+      args:
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - HTTP_PROXY=${HTTP_PROXY}
+    platform: linux/amd64
+    volumes:
+      - ${HOST_DATA_PATH}:/app/data
+      #- shared-data:/app/data
+    networks:
+      - shared-network
+
+volumes:
+  shared-data:
+
+networks:
+  shared-network:
+    driver: bridge

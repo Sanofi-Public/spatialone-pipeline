@@ -1,0 +1,17 @@
+{
+    "compositeMode": "<mode>",
+    "filters": [
+        "Saturation",
+        "Brightness",
+        "Contrast"
+    ],
+    "layerFilters": "<layer_filters>",
+    "layerOpacities": "<layer_opacities>",
+    "layerVisibilities": "<layer_visibilities>",
+    "layers": "<layers>",
+    "markerFiles": [
+    ],
+    "plugins": [
+    ],
+    "regionFiles": []
+}

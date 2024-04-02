@@ -1,0 +1,6 @@
+storage.data_io:
+  paths:
+    input_path: "/app/data/prep/<exp_id>"
+    output_path: "/app/data/results/<exp_id>"
+    cache_dir: "/app/cache"
+    reference_path: "/app/data/reference"

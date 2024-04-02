@@ -1,0 +1,34 @@
+# WIP (default values set)
+defaults:
+  - dataio:
+    - default
+  - param:
+    - default
+  - imgseg:
+    - cellpose
+    - hovernet
+  - cell2spot:
+    - default
+  - celldeconv:
+    - cell2location
+    - card
+  - cluster:
+    - kmeans
+    - gaussian
+  - assign:
+    - local
+    - naive
+    - global
+  - qc:
+    - default
+  - datamerge:
+    - default
+    - generic_config
+    - po_lung_human
+    - pmcb_eso_human
+    - pmcb_kidney_mouse
+    - pmcb_skin_human
+    - demo_user_lung_human
+  - spatialanalysis:
+    - default
+  #-------------------------

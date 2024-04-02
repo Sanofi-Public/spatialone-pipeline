@@ -1,0 +1,19 @@
+dataio.params:
+  pipeline_name_supported: [
+    "imgseg",
+    "cell2spot",
+    "celldeconv",
+    "cluster",
+    "qc",
+    "datamerge",
+    "spatialanalysis",
+    "dataio",
+    "param",
+
+    ]
+dataio.paths:
+  config_flow_dir: "conf/"
+  data_dir: "/app/data/" # this path is used to refer to /data within docker container
+  local_prep_path: "prep/<exp_id>/"
+  local_results_path: "results/<exp_id>/"
+  local_reference_path: "reference/"

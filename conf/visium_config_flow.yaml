@@ -1,0 +1,148 @@
+user.id: "user@email.com" # for internal metadata handling
+run.name: "Short name for the analysis"
+run.description: "Description of the analysis"
+run.summary: "Short Descritpion fo the analyiss"
+experiment.ids: [
+    # List of experiments to analyze
+    # Experiment names must match folder names in 'prep' folder.
+    # They will be analyzed concurrently using the same configuration params.
+    "CytAssist_FFPE_Human_Lung_Squamous_Cell_Carcinoma",    # Experiment 1
+    "CytAssist_11mm_FFPE_Human_Lung_Cancer"                 # Experiment 2
+    ]
+pipelines.enabled:
+    # Defines the pipelines to be executed
+    # Note that there may be dependencies between pipelines, if basic pipelines like
+    # celldeconv or imgseg are set to FALSE, the succeeding pipelines will only execute
+    # if there are previous celldeconv or imgseg available in the results folder
+    imgseg: True     # cell segmentation
+    cell2spot: True  # matching cells to visium spots
+    celldeconv: True # cell deconvoluiton
+    cluster: True    # morphological clustering
+    assign: True     # cell assignment integrates celldeconvolution with cell segmentation
+    qc: True         # QC metrics generation
+    datamerge: True  # To visualize in Tissuumaps enable "datamerge: true"
+    spatialanalysis: True # Spatial analysis reporting
+imgseg:
+    # Select the imagesegmentation method to be used and define its parameters
+    image.resolution: "400dpi" # information tracked as metada, not used in the analysis
+    image.magnification: "20x" # information tracked as metada, not used in the analysis
+    model: # Select between cellpose and hovernet
+        name: "cellpose"
+        version: "2.1.1" # version tracking for retrocompatibility purposes
+        params:
+            # Check https://cellpose.readthedocs.io/en/latest/settings.html
+            patch_size: 512         # Patch size for the Neural network
+            overlap: 496            # Pixel at which patches will overlap
+            downsample_factor: 1    # Reduce the size of the image. Set this to 2 if your image is 40x
+            n_channels: 3           # Number or channels the image has
+            channels: [1,0]         # 0=grayscale, 1=red, 2=green, 3=blue
+            model_type: "nuclei"    # cellpose model, nuclei is reccomended
+            batch_size: 100         # Number of tiles that will be simultaneously processed
+            diameter: 16            # expected cell diameter in pixels. 0 will try to autoestimate
+            flow_threshold: 0.8     # low values increase confidence and reduce recall, high values increase recall and reducee precision
+        ### Uncomment this block and comment the prevoious one  if you prefer to use Hovernet
+        # name: "hovernet"
+        # version: "0.0.1" # version tracking for retrocompatibility purposes
+        # params:
+        #     gpu: '0'                  # ID of the GPU to be used
+        #     nr_types: 5               # Number of cell types Hovernet weights were trained with
+        #     batch_size: 16            # Number of tiles that will be simultaneously processed
+        #     model_mode: "original"    # Hovernet model to use (fast or original)
+        #     nr_inference_workers: 1   # Parallelization
+        #     nr_post_proc_workers: 1   # Paralleization
+        #     wsi: True                 # Analyze the whole slide
+        #     tile: False               # Analyze the tiles independenlty
+        #     help: False               # must be set to false
+cell2spot:
+    # Pipeline that will assign segmented cells to their correspondent spots. no need to configure it
+    model:
+        name: "default"
+        version: "X.X.X" # version tracking for retrocompatibility purposes
+celldeconv:
+    # Select the celldeconv method to be used (CARD or cell2location)
+    model:
+        ### Uncomment this block to use CARD ###
+        # name: "card"
+        # version: "X.X.X" # version tracking for retrocompatibility purposes
+        # params:
+        #     #params for the dataset under analysis
+        #     min_count_gene : 100       # numeric, include spatial locations where at least this number of counts detected. Default is 100.
+        #     min_count_spot : 5         # numeric, include genes where at least this number of spatial locations that have non-zero expression. Default is 5.
+        #     ct_varname: 'cellType'     # caracter, the name of the column in sc_meta that specifies the cell type assignment.
+        #     ct_select: 'NULL'          # vector of cell type names that you are interested in to deconvolute, default as NULL. If NULL, then use all cell types provided by single cell dataset.
+        #     atlas_type : 'kidney'      # reference sc dataset to be used. name must match *_cell_atlas.h5ad objects in reference folder.
+        #     sc_label_key : 'cell_type' # the .obs data frame column name defining cell type annotation
+        #     sc_sample_key : 'batch'    # this is the 'batch' parameter for CARD
+        name: "cell2location"
+        version: "0.1.3" # version tracking for retrocompatibility purposes
+        params:
+            seed : 2023
+            #params for clean sc datasets
+            sc_cell_count_cutoff : 20           # a int variable for gene filter. A gene should be detected over minimum of cells counts e.g. should be detected in over 20 cells
+            sc_cell_percentage_cutoff2 : 0.05   # (0,1) float variable for gene filter. A gene should be detected over minimum percent of cells.
+            sc_nonz_mean_cutoff : 1.12          # (1, ) float variable for gene filter. A gene should have mean expression across non-zero cells slightly larger than 1
+            #params for training sc to get st signatures
+            sc_batch_key: "batch"               # column in the reference data set that determines experiment category grouping  e.g. 10X reaction / sample / batch
+            sc_label_key: "cell_type"           # column in the reference data set used for constructing signatures
+            sc_categorical_covariate_keys: []   # multiplicative technical effects (platform, 3' vs 5', donor effect), can be empty list
+            sc_max_epoches : 50                 # maximum number of epochs used when building the sc signature file
+            sc_lr : 0.02                        # learning rate used when building the sc signature file
+            sc_use_gpu : True                   # use GPU for  building the sc signature file
+            #parames for training st to get cell aboundance
+            st_N_cells_per_location : 20        # expected number of cells per spot
+            st_detection_alpha : 200            # hyperparameter controlling normalisation of within-experiment variation in RNA detection
+            st_max_epoches : 25000              # maximum number of epochs used when building the sc signature file. Increase this value if the cell distribution do not seem to follow random patterns
+            cell_aboundance_threshold : 0.1     # cells which abundance in a spot is lower than this threshold will be ignored
+            atlas_type : 'luca'                 # reference sc dataset to be used. name must match *_cell_atlas.h5ad objects in reference folder.
+            mode : ### model
+            retrain_cell_sig: True              # if set to false, it will load the pre-trained {atlas_name}_cell_sig.h5 file from reference. If set to true, it will train again the cell signature. Set to true the first time the atlas is used.
+cluster:
+    # Parameters to set up morphological clustering
+    model:
+        name: "gaussian"        # "gaussian" or "kmeans"
+        version: "X.X.X" # version tracking for retrocompatibility purposes
+        params:
+            n_clusters: 20                  # number of clusters
+            spot_clustering: True
+            # clustering_batch_size: 1024   # partition data in groups for efficiency. only used in kmeans
+assign:
+    # Select betweeen local, naive or global assigning methods
+    model:
+        name: "local" #
+        version: "X.X.X" # version tracking for retrocompatibility purposes
+    # model:
+    #     name: "naive"
+    #     version: "X.X.X" # version tracking for retrocompatibility purposes
+    #     params:
+    #         random_state: 0
+    # model:
+    #     name: "global"    # May have very slow performance
+    #     version: "X.X.X"  # version tracking for retrocompatibility purposes
+    #     params:
+    #         n_clusters: 20                # number of clusters to consider. make it consistent with expected cell types
+    #         clustering_batch_size: 1024   # partition data in groups for efficiency. only used in kmeans
+    #         random_state: 0
+qc:
+    # QC metrics module, no need to setup
+    model:
+        name: "default"
+        version: "X.X.X" # version tracking for retrocompatibility purposes
+datamerge:
+    run_data_merge_only: True
+    model:
+        name: "default"
+        version: "X.X.X" # version tracking for retrocompatibility purposes
+        params:
+            annotation_file: "annotations.geojson"  # name of the file containing annotations
+            spot_index: "barcode"                   # column containing the barcode index (default: "barcode")
+            cell_index: "cell_ids"                  # column containing the cell ids (default: "cell_ids")
+            # Genes defined in the following parameters will be used for the spatial structure analyisis and visualization
+            target_genes: []                # List of genes to be included [gene1,gene2,gene3]
+            n_top_expressed_genes: 750      # Forces to include the top 500 most expressed genes in the reporting
+            n_top_variability_genes: 750    # Forces to include the top 500 genes with highest variability in the reporting
+spatialanalysis:
+    # Spatial structure analyiss params, no need to set up.
+    model:
+        name: "default"
+        version: "X.X.X"    # version tracking for retrocompatibility purposes
+run_id: "714"               # for internal metadata handling

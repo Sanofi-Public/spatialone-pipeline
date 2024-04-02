@@ -1,0 +1,62 @@
+qc.default:
+  params:
+    mit_genes_filter:
+      start_with: ["MT-"]
+      list_of_gene_ids: None
+      label: "qc_mitochondrial_genes"
+    metrics_labels:
+      spot_qc_labels: {"id": "barcode",
+                       "UMI": "qc_nGenes",
+                       "UMI_prop": "qc_nGenes_prop",
+                       "UMI_cts": "qc_nCounts",
+                       "UMI_cts_prop": "qc_nCounts_prop",
+                       "cts_by_UMI": "qc_CountByGene",
+                       "Saturation": "qc_GeneSaturation" }
+      gene_qc_labels: { "id": "gene",
+                         "UMI": "qc_nSpots",
+                         "UMI_prop":"qc_nSpots_prop",
+                         "UMI_cts": "qc_nCounts",
+                         "UMI_cts_prop": "qc_nCounts_prop",
+                         "cts_by_UMI": "qc_CountsBySpot",
+                         "Saturation": "qc_SpotSaturation"}
+      overall_qc_labels: { "id": "exp_id",
+                            "UMI": "qc_detected_Probes",
+                            "UMI_cts": "qc_Library_size",
+                            "cts_by_UMI": "qc_CountByProbes",
+                            "Saturation": "qc_Saturation"}
+  unittest:
+    raw_feature_bc_matrix:
+      bucket: "prep"
+      extension: "h5"
+    scalefactors_json:
+      bucket: "prep"
+      extension: "json"
+    spots_df:
+      bucket: "prep"
+      extension: "csv"
+    tissue_lowres_image:
+      bucket: "prep"
+      extension: "png"
+  inputs:
+    raw_feature_bc_matrix:
+      bucket: "prep"
+      extension: "h5"
+    scalefactors_json:
+      bucket: "prep"
+      extension: "json"
+    tissue_lowres_image:
+      bucket: "prep"
+      extension: "png"
+    spots_df:
+      bucket: "results"
+      extension: "csv"
+  outputs:
+    spot_qc:
+      bucket: "results"
+      extension: "csv"
+    gene_qc:
+      bucket: "results"
+      extension: "csv"
+    overall_qc:
+      bucket: "results"
+      extension: "csv"

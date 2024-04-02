@@ -1,0 +1,52 @@
+celldeconv.cell2location:
+  params:
+    seed : 2023
+    #params for clean sc datasets
+    sc_cell_count_cutoff : 20 #a int variable for gene filter. A gene should be detected over minimum of cells counts e.g. should be detected in over 20 cells
+    sc_cell_percentage_cutoff2 : 0.05 #(0,1) float variable for gene filter. A gene should be detected over minimum percent of cells.
+    sc_nonz_mean_cutoff : 1.12 # (1, ) float variable for gene filter. A gene should have mean expression across non-zero cells slightly larger than 1
+    #params for training sc to get st signatures
+    sc_batch_key: #  single cell data batch category, e.g. 10X reaction / sample / batch
+    sc_label_key: "cell_type" # cell type, covariate used for constructing signatures
+    sc_categorical_covariate_keys: [] # multiplicative technical effects (platform, 3' vs 5', donor effect)
+    sc_max_epoches : 50
+    sc_lr : 0.02
+    sc_use_gpu : True
+    #parames for training st to get cell aboundance
+    st_N_cells_per_location : 20
+    st_detection_alpha : 200
+    st_max_epoches : 6000
+    cell_aboundance_threshold : 0.1 #cell aboundance threshold set, reduce aboundance below threshold to 0. Default,  cell abundance >0.1 was used as a gold standard label
+    atlas_type : 'hlca'
+    mode : ### model
+    retrain_cell_sig: False ## if need to re-train a signature or a treained signature is exist for using
+  unittest:
+    lung_atlas_cell_sig:
+      bucket: "prep"
+      extension: "h5ad"
+    filtered_feature_bc_matrix:
+      bucket: "prep"
+      extension: "h5"
+    spots_df:
+      bucket: "prep"
+      extension: "csv"
+  # cell_atlas and cell_sig files below require a prefix (e.g. luca_)
+  cell_atlas:
+    _cell_atlas:
+      bucket: "prep"
+      extension: "h5ad"
+  cell_sig:
+    _cell_sig:
+      bucket: "prep"
+      extension: "h5ad"
+  inputs:
+    filtered_feature_bc_matrix:
+      bucket: "prep"
+      extension: "h5"
+    spots_df:
+      bucket: "results"
+      extension: "csv"
+  outputs:
+    cell2location_results:
+      bucket: "results"
+      extension: "csv"

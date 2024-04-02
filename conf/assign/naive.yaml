@@ -1,0 +1,39 @@
+assign.naive:
+  params:
+    random_state: 0
+  unittest:
+    unit_test_master_table:
+      bucket: "prep"
+      extension: "csv"
+    unit_test_seg:
+      bucket: "prep"
+      extension: "npy"
+    unit_test_cell2location_results:
+      bucket: "prep"
+      extension: "csv"
+    unit_test_cells_df:
+      bucket: "prep"
+      extension: "csv"
+  inputs:
+    wsi: # do we want to change the file names?
+      bucket: "prep"
+      extension: "tif"
+    hovernet_cell_segmentation_full:
+      bucket: "results"
+      extension: "npy"
+    cellpose_cell_segmentation_full:
+      bucket: "results"
+      extension: "npy"
+    cell2location_results:
+      bucket: "results"
+      extension: "csv"
+    card_results:
+      bucket: "results"
+      extension: "csv"
+    cells_df:
+      bucket: "results"
+      extension: "csv"
+  outputs:
+    spot_clusters:
+      bucket: "results"
+      extension: "csv"

@@ -1,0 +1,7 @@
+datamerge.generic_config:
+  params:
+    spots_df_cols_omit: ["in_tissue", "spot_polygons", "array_col", "array_row"]
+    cells_df_cols_omit: ["cell_polygons"]
+    target_genes: []
+    n_top_expressed_genes: 500      # Forces to include the top 500 most expressed genes in the reporting
+    n_top_variability_genes: 500    # Forces to include the top 500 genes with highest variability in the reporting

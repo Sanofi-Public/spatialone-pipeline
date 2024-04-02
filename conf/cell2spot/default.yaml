@@ -1,0 +1,32 @@
+cell2spot.default:
+  params:
+  unittest:
+    cell_segmentation_patch:
+      bucket: "prep"
+      extension: "npy"
+    tissue_positions_list_patch:
+      bucket: "prep"
+      extension: "csv"
+    scalefactors_json:
+      bucket: "prep"
+      extension: "json"
+  inputs:
+    # hovernet_cell_segmentation_full:
+    #   bucket: "results"
+    #   extension: "npy"
+    cellpose_cell_segmentation_full:
+      bucket: "results"
+      extension: "npy"
+    tissue_positions_list:
+      bucket: "prep"
+      extension: "csv"
+    scalefactors_json:
+      bucket: "prep"
+      extension: "json"
+  outputs:
+    spots_df:
+      bucket: "results"
+      extension: "csv"
+    cells_df:
+      bucket: "results"
+      extension: "csv"

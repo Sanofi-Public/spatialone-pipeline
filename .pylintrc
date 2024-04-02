@@ -1,0 +1,8 @@
+[LOGGING]
+disable =   attribute-defined-outside-init,
+            line-too-long,
+            consider-using-min-builtin,
+            too-many-locals,
+            unidiomatic-typecheck,
+            too-many-instance-attributes,
+            import-outside-toplevel

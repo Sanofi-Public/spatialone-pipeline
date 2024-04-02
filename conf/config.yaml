@@ -1,0 +1,15 @@
+# WIP (default values set)
+defaults:
+  - dataloader: s3
+  - image_segmentation: basic_image_seg
+  - clustering: basic_clustering
+  - data_io: default_data_io
+  - cell_to_spot: default_cell_to_spot
+  - infer_cna: default_infer_cna
+  - cell_deconv: default_cell_deconv
+  - cell_signature: default_cell_signature
+  - cell_type_integrate: default_cell_type_integrate
+  - qc: default_qc
+  - data_merge: onc_data_merge
+  - spatial_analysis: default_spatial_analysis
+#-------------------------

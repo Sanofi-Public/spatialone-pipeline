@@ -1,0 +1,7 @@
+datamerge.po_lung_human:
+  params:
+    target_genes: ["GFR", "KRAS", "MET", "LKB1", "BRAF", "PIK3CA", "ALK", "RET", "ALK", "BRAF", "CDKN2A", "EGFR", "MAP2K1", "NF1", "NRAS", "ROS1", "FOX", "CCR", "TREG", "CD", "CEACAM", "MT"]
+    spots_df_cols_omit: ["in_tissue", "spot_polygons", "array_col", "array_row"]
+    cells_df_cols_omit: ["cell_polygons"]
+    n_top_expressed_genes: 200      # Forces to include the top 200 most expressed genes in the reporting
+    n_top_variability_genes: 200    # Forces to include the top 200 genes with highest variability in the reportin
