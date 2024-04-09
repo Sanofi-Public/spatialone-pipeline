@@ -1,6 +1,6 @@
 api:
   url: "https://api.sbgenomics.com/v2"
-  token: "***REMOVED***"
+  token: "put_your_own_token_here"
   advance_access: True
   overwrite: True
   copy_only: True
