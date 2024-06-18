@@ -9,7 +9,7 @@ This repository contains the code and dockefiles to replicate results present in
 
 ## System requirements
 
-SpatialOne provides docker images for both AMD and ARM architectures. The compute requirements depends on the size of the input/experiment data being analyzed (i.e. resolution of microscopy image, size of reference single cell dataset). 
+SpatialOne provides docker images for both AMD and ARM architectures. The compute requirements depends on the size of the input/experiment data being analyzed (i.e. resolution of microscopy image, size of reference single cell dataset).
 
 With the exception of the Hovernet model, SpatialOne can run without a GPU where the cell segmentation (Cellpose) and cell deconvolution (CARD and Cell2Location) run with CPUs, however, the CPU-only approach will significantly increase the execution time. For GPU-based execution, we reccommend running SpatialOne using a CUDA-compatible GPU. Lastly, some of the libraries used in SpatialOne rely on PyTorch, which does not ensure reproducibility between CPU and GPU executions, therefore minor differences should be expected in the cell deconvolution results between CPU and GPU executions.
 
@@ -56,7 +56,7 @@ We recommend placing this folder in the same level of directory as the spatialon
 
 - **conf/visium_config_flow.yaml** - contains all configuration parameters such as sample_id, pipelines to run or specific run parameters. Example can be found under the conf/ folder of this repository.
 
-- **prep/** - this is where all sample specific input data lies. Each folder within prep/ must correspond to a different experiment which contains the respective SpaceRanger outputs. 
+- **prep/** - this is where all sample specific input data lies. Each folder within prep/ must correspond to a different experiment which contains the respective SpaceRanger outputs.
 
 - **reference/** - this is where non-sample specific input data lies, for example reference datasets or pretrained models. Pipeline expects the following data to be present:
 
@@ -76,9 +76,9 @@ SpatialOne requires the following files, which can be obtained from SpaceRangerâ
 - **tissue_lowres_image.png**
 - **tissue_positions_list.csv**
 - **wsi.tif:** _High resolution image obtained from a mycrocospe. Its resolution must be aligned to the scalefactors_json.json file._
-- **gene_graph_clusters.csv**: 
+- **gene_graph_clusters.csv**:
     - _CSV file containing the clustering results from the space ranger analysis. We reccomend using the output of the graph-based clustering, but it also works with the results of K-means clustering analysis provided by SpaceRanger._
-- **parameters.csv**: 
+- **parameters.csv**:
     - _CSV file containing basic metadata on the experiment properties._
 - **annoations.geojson** (optional): A geojson file defining regions of interest that will be analyzed by the pipeline.
 - **web_summary**
