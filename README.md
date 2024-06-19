@@ -54,7 +54,7 @@ data/
 
 We recommend placing this folder in the same level of directory as the spatialone-pipeline repository. The section below provides detailed information about each file/folder under the "data/" directory.
 
-- **conf/visium_config_flow.yaml** - contains all configuration parameters such as sample_id, pipelines to run or specific run parameters. Example can be found under the conf/ folder of this repository.
+- **conf/visium_config_flow.yaml** - contains all configuration parameters such as sample_id, pipelines to run or specific run parameters. An example can be found under the conf/ folder of this repository.
 
 - **prep/** - this is where all sample specific input data lies. Each folder within prep/ must correspond to a different experiment which contains the respective SpaceRanger outputs.
 
@@ -65,6 +65,13 @@ We recommend placing this folder in the same level of directory as the spatialon
     - pretrained model (if using hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
     - label info (if using hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/type_info.json?download=1)
 
+#### Setting up the analysis configuration
+In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file. 
+This file is usally place under **conf/visium_config_flow.yaml**. 
+
+In such file, the user needs to define the analysis metada:
+
+As well as the different analysis module parameters. The [following page](docs_md/parameters.md) contains a detailed description of all the relevant parameters for each module.
 
 ### **Input files for Spatial One:**
 
