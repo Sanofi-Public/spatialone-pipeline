@@ -69,9 +69,61 @@ We recommend placing this folder in the same level of directory as the spatialon
 In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file. 
 This file is usally place under **conf/visium_config_flow.yaml**. 
 
-In such file, the user needs to define the analysis metada:
+In such file, the user needs to define the analysis metada, the pipeline modules that will be used, and the configuration parameters for each module.
 
-As well as the different analysis module parameters. The [following page](docs_md/parameters.md) contains a detailed description of all the relevant parameters for each module.
+- **Experiment Metadata**: Defines who set up the analysis, describes it, and defines the samples that will be analyzed. Each sample name should correspond to an independent subfolder under the **data/prep** directory.
+```yaml user.id: "user@email.com" # for internal metadata handling
+run.name: "Short name for the analysis"
+run.description: "Description of the analysis"
+run.summary: "Short Descritpion fo the analyiss"
+experiment.ids: [
+    # List of experiments to analyze
+    # Experiment names must match folder names in 'prep' folder.
+    # They will be analyzed concurrently using the same configuration params.
+    "CytAssist_FFPE_Human_Lung_Squamous_Cell_Carcinoma",    # Experiment 1
+    "CytAssist_11mm_FFPE_Human_Lung_Cancer"                 # Experiment 2
+    ]
+```
+
+- **Pipeline Modules:** The different spatialone modules should be set to True or False.
+```yaml pipelines.enabled:
+    # Defines the pipelines to be executed
+    # Note that there may be dependencies between pipelines, if basic pipelines like
+    # celldeconv or imgseg are set to FALSE, the succeeding pipelines will only execute
+    # if there are previous celldeconv or imgseg available in the results folder
+    imgseg: True     # cell segmentation
+    cell2spot: True  # matching cells to visium spots
+    celldeconv: True # cell deconvoluiton
+    cluster: True    # morphological clustering
+    assign: True     # cell assignment integrates celldeconvolution with cell segmentation
+    qc: True         # QC metrics generation
+    datamerge: True  # To visualize in Tissuumaps enable "datamerge: true"
+    spatialanalysis: True # Spatial analysis reporting
+```
+
+- **Module parameters:** For all the modules set to _True_, the user needs to define their individual parameters under a block corresponding to the module name. 
+A full list of each module parameter is available [here](docs_md/parameters.md); a config file example that can be used as template is available [here](conf/visium_config_flow.yaml)
+```yaml
+module_name_1: # For instance, imgseg 
+    model: # Select the implemented algorithm
+        name: "algorithm_name" # e.g. Cellpose
+        version: "2.1.1" # version tracking for retrocompatibility purposes
+        params: # Full list of algoirthm parameters available at docs_md/parameters.md
+            parameter_1: value      
+            parameter_2: value      
+            ... # Reduce the size of the image. Set this to 2 if your image is 40x
+            parameter_n: value
+
+module_name_2: # For instance, celldeconv
+    model: # Select the implemented algorithm
+        name: "algorithm_name" # e.g. cell2location
+        version: "0.1.3" # version tracking for retrocompatibility purposes
+        params: # Full list of algoirthm parameters available at docs_md/parameters.md
+            parameter_1: value      
+            parameter_2: value      
+            ... # Reduce the size of the image. Set this to 2 if your image is 40x
+            parameter_n: value   
+```
 
 ### **Input files for Spatial One:**
 

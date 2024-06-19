@@ -65,26 +65,21 @@ Please refer to the official [documentation](https://cellpose.readthedocs.io/en/
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | downsample_factor | Factor to downsample the image. Use a value of 2 for 40X images to match the 20X image training set.                                |
 | diameter          | Expected average cell size in pixels. A value of 0 allows the model to estimate cell size automatically.                            |
+| batch_size     | Number of tiles that will be simultaneously processed. |
+| flow_threshold | Determines the aggressiveness of segmentation. Low values (e.g. 0.4) result in fewer segmented cells with high confidence, while high values (e.g. 0.8) result in more segmented cells with a higher risk of false positives.|
+| n_channels     | Number of channels the image has |
+| channels     | Determines which channels will be used to segment the cells:<br>\- 0,0: all channels<br>\- 1,0: blue channel<br>\- 2,0: green channel<br>\- 3,0: red channel |
+| overlap        | Defines if tiles should overlap at the edges, ensuring cells on the border of a tile are also segmented. |
+| patch_size     | Size of the tiles the image will be broken into for analysis. |
+| model_type     | Specifies if the model should segment nuclei or cytoplasm. |
 
-
-[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
-#### Advanced Parameters
-| Parameter      | Description                                                                                                                                                                                                                                                                                                                                                                                                |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| batch_size     | Number of tiles that will be simultaneously processed.                                                                                                                                                                                                                                                                                                                                                       |
-| flow_threshold | Determines the aggressiveness of segmentation. Low values (e.g. 0.4) result in fewer segmented cells with high confidence, while high values (e.g. 0.8) result in more segmented cells with a higher risk of false positives.                                                                                                                                                                               |
-| model_type     | Specifies if the model should segment nuclei or cytoplasm.                                                                                                                                                                                                                                                                                                                                                   |
-| n_channels     | Determines which channels will be used to segment the cells:<br>\- 0,0: all channels<br>\- 1,0: blue channel<br>\- 2,0: green channel<br>\- 3,0: red channel                                                                                                                                                                                                                                             |
-| overlay        | Defines if tiles should overlap at the edges, ensuring cells on the border of a tile are also segmented.                                                                                                                                                                                                                                                                                                     |
-| patch_size     | Size of the tiles the image will be broken into for analysis.                                                                                                                                                                                                                                                                                                                                               |
 
 [Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ### Hovernet
 Hovernet is a deep learning-based cell segmentation algorithm designed to simultaneously segment and classify nuclei in histopathology images. SpatialOne uses the Hovernet model for its segmentation analysis but does not use the classification capabiliteis. SpatialOne relies on the Consep-trainned version of HoverNet. PanNvke-trained version of Hovernet provides better performance than Consep but it is not included in SpatialOne due to the dataset having a more restrictive license.
 
-The user does not need to set up any basic parameter for running Hovernet. Please refer to the official [github repository](https://github.com/vqdang/hover_net) for additional details.
+ Please refer to the official [github repository](https://github.com/vqdang/hover_net) for additional details.
 
-#### Advanced Parameters
 | Parameter             | Description                                                                                                            |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | gpu                  | Determines whether to use GPU for processing.                                                                           |
@@ -184,17 +179,12 @@ SpatialOne can cluster cells based on their morphology using Batch K-means and G
 
 [Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Quality Control
-For QC analysis, only information regarding mitochondrial gene filtering is required.
+For QC analysis, no specific inputs are required. Optionally, the user can provide information regarding mitochondrial gene filtering.
 
 ### Basic Parameters
 | Parameter         | Description                                                                                         |
 | ----------------- | ----------- |
 | label             | String label used to indicate filtered genes (default: "qc_mitochondrial_genes").                   |
-
-[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
-### Advanced Parameters
-| Parameter         | Description                                                                                         |
-| ----------------- | --------------------- |
 | list_of_gene_ids  | Genes in the list will be filtered as mitochondrial genes.                                          |
 | start_with        | Genes starting with the following string will be filtered as mitochondrial genes (default: "-MT"). |
 
@@ -208,19 +198,22 @@ The datamerge step determines how the data generated during the segmentation, de
 | n_top_expressed_genes   | Number of top expressed genes to include in the reporting. Default is 500.                                      |
 | n_top_variability_genes | Number of top variability genes to include in the reporting. Default is 500.                                    |
 | target_genes            | List of specific genes to include in the analysis regardless of their expression levels. Default is an empty list. |
+| annotation_file (optional)| Defines the location of the geojson file containing tissue annotations |
 
 [Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter              | Description                                                                                                     |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
 | cell_index             | Column defining the cell index. Default is "cell_ids".                                                          |
-| cells_df_cols_omit     | List of columns to omit from the cells_df. Default is ["cell_polygons"].                                        |
+| cells_df_cols_omit (optional) | List of columns to omit from the cells_df. Default is ["cell_polygons"].                                        |
 | spot_index             | Column defining the spot index. Default is "barcode".                                                           |
-| spots_df_cols_omit     | List of columns to omit from spots_df. Default is ["in_tissue", "spot_polygons", "array_col", "array_row"].     |
+| spots_df_cols_omit  (optional) | List of columns to omit from spots_df. Default is ["in_tissue", "spot_polygons", "array_col", "array_row"].     |
 
 [Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Spatial Structure Analysis
-The following sections set up which analysis will be conducted at each section of the spatial structure analysis.
+The Spatial Sructure analysis module do not require the user to set up any parameter. All the analysis will be executed by default; if any of the analysisis lacks the data it requires, SpatialOne will skip such analysis.
+
+The following sections describe the _optional_ parameters that can be set up in the spatial structure analysis.
 
 ### Whole Tissue Analysis
 
