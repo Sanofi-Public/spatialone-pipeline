@@ -32,5 +32,7 @@ COPY . .
 # install CARD requirements
 RUN Rscript -e "source('requirements.R')"
 
+RUN unset NO_PROXY HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
+
 # run api
 CMD ["Rscript", "run.R"]

@@ -58,6 +58,9 @@ RUN make install-arm
 RUN pip install numpy --upgrade --user
 RUN pip install numba --upgrade --user
 
+# Unset all proxy vars
+RUN unset NO_PROXY HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
+
 # Expose port 80 for the application
 EXPOSE 80
 
