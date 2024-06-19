@@ -1,8 +1,12 @@
 <h1 align="center"> SpatialOne: Spatial Transcriptomics at Scale</h1>
+SpatialOne is an innovative tool designed to streamline the analysis of spatial transcriptomics data generated using platforms such as 10X Genomics Visium. By integrating both image and transcriptomics data, SpatialOne enables comprehensive analysis, combining state-of-the-art methods and pipelines to delve deeply into spatial data. This tool simplifies the complex process of analyzing spatial transcriptomics by offering an end-to-end solution that includes cell segmentation, deconvolution, and spatial structure analysis, ultimately generating detailed HTML reports. These results can be further explored using TissUUmaps, an open-source tool for visualizing spatial data.
+
+**Key Features:**
+SpatialOne leverages a modular approach to provide flexibility and extensibility in spatial transcriptomics analysis. Users can customize the analysis pipeline by selecting the most appropriate algorithms and parameters for each step. The workflow is designed to be user-friendly, with a low-code interface that allows researchers to produce robust and reproducible results without requiring advanced computational skills. SpatialOne is distributed as a Docker container, ensuring ease of installation and reproducibility across different computing environments. The tool generates comprehensive outputs, including HTML summary reports, CSV files, and AnnData files, which can be visualized interactively using TissUUmaps or analyzed further with standard bioinformatics tools.
 
 <div style="text-align: center;">
   <img src="figs/spatialoneflow.png" alt="SpatialOne"/>
-  <p><em>SpatialOne uses SpaceRanger for expression processing and cell segmentation and cell deconvolution methods to determine cell types. Using the cell location estimation, it generates descriptive analytics, an HTML spatial structure report, compares regions of interest if provided, and displays results in the TissUUmaps interactive viewer</em></p>
+  # <p><em>SpatialOne uses SpaceRanger for expression processing and cell segmentation and cell deconvolution methods to determine cell types. Using the cell location estimation, it generates descriptive analytics, an HTML spatial structure report, compares regions of interest if provided, and displays results in the TissUUmaps interactive viewer</em></p>
 </div>
 
 This repository contains the code and dockefiles to replicate results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and used to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers. This section provides details on how to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic) using docker.
@@ -65,6 +69,65 @@ We recommend placing the "data/" folder in the same level of directory as the sp
     - pre-trained model (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
     - label info (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/type_info.json?download=1)
 
+#### **Setting up the analysis configuration:**
+In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file. 
+This file is usally place under **conf/visium_config_flow.yaml**. 
+
+In such file, the user needs to define the analysis metada, the pipeline modules that will be used, and the configuration parameters for each module.
+
+- **Experiment Metadata**: Defines who set up the analysis, describes it, and defines the samples that will be analyzed. Each sample name should correspond to an independent subfolder under the **data/prep** directory.
+```yaml user.id: "user@email.com" # for internal metadata handling
+run.name: "Short name for the analysis"
+run.description: "Description of the analysis"
+run.summary: "Short Descritpion fo the analyiss"
+experiment.ids: [
+    # List of experiments to analyze
+    # Experiment names must match folder names in 'prep' folder.
+    # They will be analyzed concurrently using the same configuration params.
+    "CytAssist_FFPE_Human_Lung_Squamous_Cell_Carcinoma",    # Experiment 1
+    "CytAssist_11mm_FFPE_Human_Lung_Cancer"                 # Experiment 2
+    ]
+```
+
+- **Pipeline Modules:** The different spatialone modules should be set to True or False.
+```yaml pipelines.enabled:
+    # Defines the pipelines to be executed
+    # Note that there may be dependencies between pipelines, if basic pipelines like
+    # celldeconv or imgseg are set to FALSE, the succeeding pipelines will only execute
+    # if there are previous celldeconv or imgseg available in the results folder
+    imgseg: True     # cell segmentation
+    cell2spot: True  # matching cells to visium spots
+    celldeconv: True # cell deconvoluiton
+    cluster: True    # morphological clustering
+    assign: True     # cell assignment integrates celldeconvolution with cell segmentation
+    qc: True         # QC metrics generation
+    datamerge: True  # To visualize in Tissuumaps enable "datamerge: true"
+    spatialanalysis: True # Spatial analysis reporting
+```
+
+- **Module parameters:** For all the modules set to _True_, the user needs to define their individual parameters under a block corresponding to the module name. 
+A full list of each module parameter is available [here](docs_md/parameters.md); a config file example that can be used as template is available [here](conf/visium_config_flow.yaml)
+```yaml
+module_name_1: # For instance, imgseg 
+    model: # Select the implemented algorithm
+        name: "algorithm_name" # e.g. Cellpose
+        version: "2.1.1" # version tracking for retrocompatibility purposes
+        params: # Full list of algoirthm parameters available at docs_md/parameters.md
+            parameter_1: value      
+            parameter_2: value      
+            ... # Reduce the size of the image. Set this to 2 if your image is 40x
+            parameter_n: value
+
+module_name_2: # For instance, celldeconv
+    model: # Select the implemented algorithm
+        name: "algorithm_name" # e.g. cell2location
+        version: "0.1.3" # version tracking for retrocompatibility purposes
+        params: # Full list of algoirthm parameters available at docs_md/parameters.md
+            parameter_1: value      
+            parameter_2: value      
+            ... # Reduce the size of the image. Set this to 2 if your image is 40x
+            parameter_n: value   
+```
 
 ### **Input files for Spatial One:**
 
