@@ -11,6 +11,17 @@ SpatialOne leverages a modular approach to provide flexibility and extensibility
 
 This repository contains the code and dockefiles to replicate results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and used to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers. This section provides details on how to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic) using docker.
 
+- [System Requirements](#system-requirements)
+- [Setup](#setup)
+  - [Setup Input Data and Configurations](#1-setup-input-data-and-configurations)
+    - [Setting up the analysis configuration](#setting-up-the-analysis-configuration)
+    - [Input files for Spatial One](#input-files-for-spatial-one)
+    - [Output files for Spatial One](#output-files-for-spatial-one)
+  - [Set Up Environment](#2-set-up-environment)
+  - [Building Docker Images](#3-building-docker-images)
+- [Running Analysis with SpatialOne](#running-analysis-with-spatialone)
+- [Visualizing Outputs in TissUUmaps](#visualizing-outputs-in-tisuumaps)
+
 ## System requirements
 
 SpatialOne provides docker images for both AMD and ARM architectures. The compute requirements depends on the size of the input/experiment data being analyzed (i.e. resolution of microscopy image, size of reference single cell dataset).
@@ -224,7 +235,7 @@ The following commands can be used to run the spatialone pipeline only when not 
       make run #gpu version
       make run-cpu #cpu only version
 
-##  Visualizing Outputs in TisUUmaps
+## Visualizing Outputs in TisUUmaps
 
 To visualize SpatialOne outputs in TissUUmaps, follow these instructions:
 1. Install TissUUmaps following its official [instructions](https://tissuumaps.github.io/installation/)
