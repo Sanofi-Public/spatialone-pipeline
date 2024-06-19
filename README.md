@@ -189,11 +189,11 @@ We need to update 2 environment variables before building the docker images for 
 
 ```
 HOST_DATA_PATH = "/Users/<user_name>/Documents/SpatialOnePipeline/data/"
-GPU_DEVICE_ID = 2
+GPU_DEVICE_ID = 0
 ```
 
-- **HOST_DATA_PATH**: absolute path for where the data and configs will be stored for running Spatial One.
-- **GPU_DEVICE_ID**: defines the ID of the GPU that will be used to run the analysis (nvidia-smi command can help determine the device ID)
+- **HOST_DATA_PATH**: This is the absolute path for where the data and configs will be stored for running Spatial One. Please ensure the path name convention above is followed exactly.
+- **GPU_DEVICE_ID**: This defines the ID of the GPU that will be used to run the analysis (nvidia-smi command can help determine the device ID). For a single GPU, it is likely that the device ID is zero.
 
 (Optional) In case you are using proxie, export them as environmental variables:
 
