@@ -65,7 +65,7 @@ We recommend placing this folder in the same level of directory as the spatialon
     - pretrained model (if using hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
     - label info (if using hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/type_info.json?download=1)
 
-#### Setting up the analysis configuration
+#### **Setting up the analysis configuration:**
 In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file. 
 This file is usally place under **conf/visium_config_flow.yaml**. 
 
