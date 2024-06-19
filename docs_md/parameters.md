@@ -65,7 +65,9 @@ Please refer to the official [documentation](https://cellpose.readthedocs.io/en/
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | downsample_factor | Factor to downsample the image. Use a value of 2 for 40X images to match the 20X image training set.                                |
 | diameter          | Expected average cell size in pixels. A value of 0 allows the model to estimate cell size automatically.                            |
-[Back to index⬆️](#parameters-index)
+
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter      | Description                                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -75,7 +77,8 @@ Please refer to the official [documentation](https://cellpose.readthedocs.io/en/
 | n_channels     | Determines which channels will be used to segment the cells:<br>\- 0,0: all channels<br>\- 1,0: blue channel<br>\- 2,0: green channel<br>\- 3,0: red channel                                                                                                                                                                                                                                             |
 | overlay        | Defines if tiles should overlap at the edges, ensuring cells on the border of a tile are also segmented.                                                                                                                                                                                                                                                                                                     |
 | patch_size     | Size of the tiles the image will be broken into for analysis.                                                                                                                                                                                                                                                                                                                                               |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ### Hovernet
 Hovernet is a deep learning-based cell segmentation algorithm designed to simultaneously segment and classify nuclei in histopathology images. SpatialOne uses the Hovernet model for its segmentation analysis but does not use the classification capabiliteis. SpatialOne relies on the Consep-trainned version of HoverNet. PanNvke-trained version of Hovernet provides better performance than Consep but it is not included in SpatialOne due to the dataset having a more restrictive license.
 
@@ -93,7 +96,8 @@ The user does not need to set up any basic parameter for running Hovernet. Pleas
 | batch_size | Number of tiles that will be simultaneously processed.                                                      |
 | model_mode | Hovernet model to use (fast or original).                                                                   |
 | nr_types   | Number of expected nuclear types. Use 5 if uncertain.                                                       |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Cell Deconvolution
 SpatialOne can deconvolute cells using Cell2Location and CARD.
 
@@ -107,7 +111,8 @@ Please refer to the official [documentation](https://cell2location.readthedocs.i
 | ------------ | ---------------------------- |
 | atlas_type   | Defines the single-cell dataset that will be used as a reference for deconvolution. This parameter is crucial as the deconvolution will consider only cell types present in the atlas. Select a reference atlas according to the organ, tissue type, and species you are analyzing.                                                                         |
 | mode         | Mode of operation for the Cell2Location algorithm.                                                                                                                                                                                                                                                                                                           |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter                  | Description                                                                                                                                                                                                                                                                                                                                                     |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -125,7 +130,8 @@ Please refer to the official [documentation](https://cell2location.readthedocs.i
 | st_N_cells_per_location    | Expected average number of cells present at each spot. Providing an accurate estimate will help the deconvolution method provide a more reliable outcome.                                                                                                                                                                                                         |
 | st_detection_alpha         | Hyperparameter controlling normalization of within-experiment variation in RNA detection.                                                                                                                                                                                                                                                                         |
 | st_max_epochs              | Maximum number of epochs used to create a model from the single-cell reference data. Higher numbers may result in a more accurate model but with the risk of overfitting.                                                                                                                                                                                        |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ### CARD
 CARD (Cellular Analysis of Regulatory DNA) is an algorithm for deconvoluting cell types in spatial transcriptomics data using reference single-cell RNA sequencing data. To set it up in SpatialOne, make sure to define an appropriate single cell reference dataset.
 
@@ -136,7 +142,8 @@ For more details about its configuration please refere to the original [github r
 | ------------ | ----------------- |
 | atlas_type   | Defines the single-cell dataset that will be used as a reference for deconvolution. This parameter is crucial as the deconvolution will consider only cell types present in the atlas. Select a reference atlas according to the organ, tissue type, and species you are analyzing.                                                                         |
 | mode         | Mode of operation for the CARD algorithm.                                                                                                                                                                                                                                                                                                                   |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter        | Description                                                                                                                                                                                                                                                                                                                                                              |
 | ---------------- | ---------- |
@@ -147,7 +154,8 @@ For more details about its configuration please refere to the original [github r
 | sc_label_key     | Column storing the label information in the single-cell reference dataset.                                                                                                                                                                                                                                                                                              |
 | sc_sample_key    | Column storing the batch information in the single-cell reference dataset.                                                                                                                                                                                                                                                                                              |
 
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Morphological Clustering
 SpatialOne can cluster cells based on their morphology using Batch K-means and Gaussian Clustering.
 
@@ -158,12 +166,14 @@ SpatialOne can cluster cells based on their morphology using Batch K-means and G
 | -------------- | ------- |
 | n_clusters     | Number of groups into which the data will be divided.                                                                 |
 | spot_clustering | Select this checkbox to improve cell assignment by using clustering information.                                       |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter         | Description                                                                                                          |
 | ----------------- | ----- |
 | clustering_batch_size | Data will be partitioned to use memory efficiently. Use this parameter to define the size of the data partition. |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ### Gaussian Clustering
 
 #### Basic Parameters
@@ -171,7 +181,8 @@ SpatialOne can cluster cells based on their morphology using Batch K-means and G
 | -------------- | --------------- |
 | n_clusters     | Number of groups into which the data will be divided.                                                                 |
 | spot_clustering | Select this checkbox to improve cell assignment by using clustering information.                                       |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Quality Control
 For QC analysis, only information regarding mitochondrial gene filtering is required.
 
@@ -179,13 +190,15 @@ For QC analysis, only information regarding mitochondrial gene filtering is requ
 | Parameter         | Description                                                                                         |
 | ----------------- | ----------- |
 | label             | String label used to indicate filtered genes (default: "qc_mitochondrial_genes").                   |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ### Advanced Parameters
 | Parameter         | Description                                                                                         |
 | ----------------- | --------------------- |
 | list_of_gene_ids  | Genes in the list will be filtered as mitochondrial genes.                                          |
 | start_with        | Genes starting with the following string will be filtered as mitochondrial genes (default: "-MT"). |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Datamerge
 The datamerge step determines how the data generated during the segmentation, deconvolution and cell estimation steps will be aggregated. The downstream analysis will only use the genes defined on the basic parameters.
 
@@ -195,7 +208,8 @@ The datamerge step determines how the data generated during the segmentation, de
 | n_top_expressed_genes   | Number of top expressed genes to include in the reporting. Default is 500.                                      |
 | n_top_variability_genes | Number of top variability genes to include in the reporting. Default is 500.                                    |
 | target_genes            | List of specific genes to include in the analysis regardless of their expression levels. Default is an empty list. |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter              | Description                                                                                                     |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -203,7 +217,8 @@ The datamerge step determines how the data generated during the segmentation, de
 | cells_df_cols_omit     | List of columns to omit from the cells_df. Default is ["cell_polygons"].                                        |
 | spot_index             | Column defining the spot index. Default is "barcode".                                                           |
 | spots_df_cols_omit     | List of columns to omit from spots_df. Default is ["in_tissue", "spot_polygons", "array_col", "array_row"].     |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ## Spatial Structure Analysis
 The following sections set up which analysis will be conducted at each section of the spatial structure analysis.
 
@@ -229,7 +244,8 @@ The following sections set up which analysis will be conducted at each section o
 | qc_report                   | Includes the Space Ranger QC report in the resulting HTML.                                              |
 | spot_avg_gene_counts        | Bar plot summarizing average gene expression per spot.                                                  |
 | spot_diff_exp               | Differential expression analysis between spots.                                                         |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter                 | Description                                                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -248,7 +264,8 @@ The following sections set up which analysis will be conducted at each section o
 | n_rings                   | Number of rings of neighbors for grid data.                                                                              |
 | n_splits                  | Number of splits in which to divide the spatial coordinates for co-occurrence analysis.                                   |
 | net_cutoff                | Cutoff for considering an interaction from neighborhood enrichment analysis.                                             |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 ### Region Analysis
 
 #### Basic Parameters
@@ -271,7 +288,8 @@ The following sections set up which analysis will be conducted at each section o
 | qc_report                   | Includes the Space Ranger QC report in the resulting HTML.                                              |
 | spot_avg_gene_counts        | Bar plot summarizing average gene expression per spot.                                                  |
 | spot_diff_exp               | Differential expression analysis between spots.                                                         |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
 #### Advanced Parameters
 | Parameter                 | Description                                                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -290,4 +308,5 @@ The following sections set up which analysis will be conducted at each section o
 | n_rings                   | Number of rings of neighbors for grid data.                                                                              |
 | n_splits                  | Number of splits in which to divide the spatial coordinates for co-occurrence analysis.                                   |
 | net_cutoff                | Cutoff for considering an interaction from neighborhood enrichment analysis.                                             |
-[Back to index⬆️](#parameters-index)
+
+[Back to index⬆️](#parameters-index) / [Back to README ⬅️](../README.md)
