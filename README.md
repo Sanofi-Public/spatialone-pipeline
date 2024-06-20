@@ -81,8 +81,8 @@ We recommend placing the "data/" folder in the same level of directory as the sp
     - label info (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/type_info.json?download=1)
 
 #### **Setting up the analysis configuration:**
-In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file. 
-This file is usally place under **conf/visium_config_flow.yaml**. 
+In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file.
+This file is usally place under **conf/visium_config_flow.yaml**.
 
 In such file, the user needs to define the analysis metada, the pipeline modules that will be used, and the configuration parameters for each module.
 
@@ -116,16 +116,16 @@ experiment.ids: [
     spatialanalysis: True # Spatial analysis reporting
 ```
 
-- **Module parameters:** For all the modules set to _True_, the user needs to define their individual parameters under a block corresponding to the module name. 
+- **Module parameters:** For all the modules set to _True_, the user needs to define their individual parameters under a block corresponding to the module name.
 A full list of each module parameter is available [here](docs_md/parameters.md); a config file example that can be used as template is available [here](conf/visium_config_flow.yaml)
 ```yaml
-module_name_1: # For instance, imgseg 
+module_name_1: # For instance, imgseg
     model: # Select the implemented algorithm
         name: "algorithm_name" # e.g. Cellpose
         version: "2.1.1" # version tracking for retrocompatibility purposes
         params: # Full list of algoirthm parameters available at docs_md/parameters.md
-            parameter_1: value      
-            parameter_2: value      
+            parameter_1: value
+            parameter_2: value
             ... # Reduce the size of the image. Set this to 2 if your image is 40x
             parameter_n: value
 
@@ -134,10 +134,10 @@ module_name_2: # For instance, celldeconv
         name: "algorithm_name" # e.g. cell2location
         version: "0.1.3" # version tracking for retrocompatibility purposes
         params: # Full list of algoirthm parameters available at docs_md/parameters.md
-            parameter_1: value      
-            parameter_2: value      
+            parameter_1: value
+            parameter_2: value
             ... # Reduce the size of the image. Set this to 2 if your image is 40x
-            parameter_n: value   
+            parameter_n: value
 ```
 
 ### **Input files for Spatial One:**
@@ -227,13 +227,13 @@ or (for cpu only machines)
 
 You will then see the progress logs in the terminal, and outputs will be produced to HOST_DATA_PATH/results/{sample_id}.
 
-### Run SpatialOne image only (without CARD or Hovernet) - supports CPU
+### Run light version of SpatialOne
 
-The following commands can be used to run the spatialone pipeline only when not using CARD or Hovernet. For GPU-enabled machines, use _"make run"_. Otherwise, use the comamnd _"make run-cpu"_. Please ensure that the configurations are set correctly under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_.
+The following commands can be used to run a light version of the spatialone pipeline (note: **CARD** or **Hovernet** are _**not**_ supported in this version). For GPU-enabled machines, use _"make run"_. Otherwise, use the comamnd _"make run-cpu"_. Please ensure that the configurations are set correctly under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_ (celldeconv - cell2location only, imgseg - cellpose only).
 
       make build
-      make run #gpu version
-      make run-cpu #cpu only version
+      make run # gpu version
+      make run-cpu # or, cpu only version
 
 ## Visualizing Outputs in TisUUmaps
 
