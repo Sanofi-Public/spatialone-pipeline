@@ -9,7 +9,7 @@ SpatialOne leverages a modular approach to provide flexibility and extensibility
   <!---<p><em>SpatialOne uses SpaceRanger for expression processing and cell segmentation and cell deconvolution methods to determine cell types. Using the cell location estimation, it generates descriptive analytics, an HTML spatial structure report, compares regions of interest if provided, and displays results in the TissUUmaps interactive viewer</em></p>!-->
 </div>
 
-This repository contains the code and dockefiles to replicate results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and used to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers. This section provides details on how to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic) using docker.
+This repository contains the code and dockefiles to replicate results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers. This section provides details on how to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic) using docker.
 
 - [System Requirements](#system-requirements)
 - [Setup](#setup)
@@ -90,7 +90,7 @@ In such file, the user needs to define the analysis metada, the pipeline modules
 ```yaml user.id: "user@email.com" # for internal metadata handling
 run.name: "Short name for the analysis"
 run.description: "Description of the analysis"
-run.summary: "Short Descritpion fo the analyiss"
+run.summary: "Short Description fo the analyis"
 experiment.ids: [
     # List of experiments to analyze
     # Experiment names must match folder names in 'prep' folder.
@@ -122,7 +122,7 @@ A full list of each module parameter is available [here](docs_md/parameters.md);
 module_name_1: # For instance, imgseg
     model: # Select the implemented algorithm
         name: "algorithm_name" # e.g. Cellpose
-        version: "2.1.1" # version tracking for retrocompatibility purposes
+        version: "2.1.1" # version tracking for retro-compatibility purposes
         params: # Full list of algoirthm parameters available at docs_md/parameters.md
             parameter_1: value
             parameter_2: value
@@ -132,7 +132,7 @@ module_name_1: # For instance, imgseg
 module_name_2: # For instance, celldeconv
     model: # Select the implemented algorithm
         name: "algorithm_name" # e.g. cell2location
-        version: "0.1.3" # version tracking for retrocompatibility purposes
+        version: "0.1.3" # version tracking for retro-compatibility purposes
         params: # Full list of algoirthm parameters available at docs_md/parameters.md
             parameter_1: value
             parameter_2: value
@@ -149,12 +149,12 @@ SpatialOne requires the following files, which can be obtained from SpaceRangerâ
 - **tissue_hires_image.png**
 - **tissue_lowres_image.png**
 - **tissue_positions_list.csv**
-- **wsi.tif:** _High-resolution image obtained from a mycrocospe. Its resolution must be aligned to the scalefactors_json.json file._
+- **wsi.tif:** _High-resolution image obtained from a microscope. Its resolution must be aligned to the scalefactors_json.json file._
 - **gene_graph_clusters.csv**:
     - _CSV file containing the clustering results from the space ranger analysis. We recommend using the output of the graph-based clustering, but it also works with the results of K-means clustering analysis provided by SpaceRanger._
 - **parameters.csv**:
     - _CSV file containing basic metadata on the experiment properties._
-- **annoations.geojson** (optional): A geojson file defining regions of interest that will be analyzed by the pipeline.
+- **annotations.geojson** (optional): A geojson file defining regions of interest that will be analyzed by the pipeline.
 - **web_summary**
 
 
@@ -195,7 +195,7 @@ GPU_DEVICE_ID = 0
 - **HOST_DATA_PATH**: This is the absolute path for where the data and configs will be stored for running Spatial One. Please ensure the path name convention above is followed exactly.
 - **GPU_DEVICE_ID**: This defines the ID of the GPU that will be used to run the analysis (nvidia-smi command can help determine the device ID). For a single GPU, it is likely that the device ID is zero.
 
-(Optional) In case you are using proxie, export them as environmental variables:
+(Optional) In case you are using proxies, export them as environmental variables:
 
     export HTTP_PROXY="<proxy_values>"
     export HTTPS_PROXY="<proxy_values>"
@@ -212,7 +212,7 @@ or (for cpu only machines)
 
     make docker-build-cpu
 
-The docker build step can take upto 20 minutes and will need about 12-15 GB to store the docker images. Please adapt the "docker-compose.yml" or "docker-compose-cpu.yml" file(s) accordingly  if an ARM image is needed (i.e. Dockerfile_arm instead of Dockerfile or Dockerfile_amd)
+The docker build step can take up to 20 minutes and will need about 12-15 GB to store the docker images. Please adapt the "docker-compose.yml" or "docker-compose-cpu.yml" file(s) accordingly  if an ARM image is needed (i.e. Dockerfile_arm instead of Dockerfile or Dockerfile_amd)
 
 ## Running analysis with SpatialOne
 Before runing the analysis, ensure that **HOST_DATA_PATH** and **GPU_DEVICE_ID** variables are set up appropriately in the ".env" file of the respository. The configurations under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_ will be used for running SpatialOne; please review the configurations before running the commmand below.
@@ -229,7 +229,7 @@ You will then see the progress logs in the terminal, and outputs will be produce
 
 ### Run light version of SpatialOne
 
-The following commands can be used to run a light version of the spatialone pipeline (note: **CARD** or **Hovernet** are _**not**_ supported in this version). For GPU-enabled machines, use _"make run"_. Otherwise, use the comamnd _"make run-cpu"_. Please ensure that the configurations are set correctly under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_ (celldeconv - cell2location only, imgseg - cellpose only).
+The following commands can be used to run a light version of the spatialone pipeline (note: **CARD** or **Hovernet** are _**not**_ supported in this version). For GPU-enabled machines, use _"make run"_. Otherwise, use the command _"make run-cpu"_. Please ensure that the configurations are set correctly under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_ (celldeconv - cell2location only, imgseg - cellpose only).
 
       make build
       make run # gpu version
