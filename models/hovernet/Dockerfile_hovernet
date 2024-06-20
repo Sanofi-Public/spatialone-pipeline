@@ -52,5 +52,12 @@ EXPOSE 80
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
+# Unset all proxy vars
+ENV NO_PROXY=""
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
+ENV http_proxy=""
+ENV https_proxy=""
+
 CMD ["uvicorn", "src.api:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "80", "--root-path", "."]
 #CMD ["tail", "-f", "/dev/null"]
