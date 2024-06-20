@@ -38,8 +38,11 @@ COPY logging.yml /app/
 COPY templates/ /app/templates/
 
 # Unset all proxy vars
-RUN unset NO_PROXY HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
-
+ENV NO_PROXY=""
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
+ENV http_proxy=""
+ENV https_proxy=""
 
 # Specify what port are exposed in your application
 # For further documentation, refer https://docs.docker.com/engine/reference/builder/#expose
