@@ -1,8 +1,8 @@
 #!/bin/bash
 
-EXPECTED_HASH="f826b44f632300e284a4ac9d24586f39ec142e7a"
+EXPECTED_HASH="f24a3c21810bc2f3b0025f58bdb4d11f26560ee7"
 
-curl -L -o SpatialOne_Data.tar.gz "https://zenodo.org/records/10848732/files/SpatialOne_Data.tar.gz?download=1"
+curl -L -o SpatialOne_Data.tar.gz "https://zenodo.org/records/12605154/files/SpatialOne_Data.tar.gz?download=1"
 
 ACTUAL_HASH=$(sha1sum "./SpatialOne_Data.tar.gz" | awk '{ print $1 }')
 

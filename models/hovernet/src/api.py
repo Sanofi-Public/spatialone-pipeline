@@ -28,8 +28,8 @@ class PredictionRequest(BaseModel):
     input_path: str
     reference_path: str
     output_path: str
-    model_filename = "hovernet_original_consep_type_tf2pytorch.tar"
-    type_filename = "type_info.json"
+    model_filename: str = "hovernet_original_consep_type_tf2pytorch.tar"
+    type_filename: str = "type_info.json"
 
 
 @app.get("/hello")

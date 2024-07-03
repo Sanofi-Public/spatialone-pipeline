@@ -28,22 +28,12 @@ RUN apt install -y libvips
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-# install python 3.6
-RUN cd /opt && \
-    wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz && \
-    tar xfv Python-3.6.9.tgz && \
-    cd Python-3.6.9 && \
-    ./configure --enable-optimizations && \
-    make altinstall && \
-    cd .. && \
-    rm -rf Python-3.6.9 && \
-    rm Python-3.6.9.tgz && \
-    cd /app;
-
+RUN apt-get install -y python3-pip
 # clone hovernet repo and install requirements
-RUN python3.6 -m pip install pip==20.3.1 && \
-    python3.6 -m pip install -r requirements-hovernet.txt
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install -r requirements-hovernet.txt
 
+RUN python3 -m pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118
 # enable output back
 ENV DEBIAN_FRONTEND=
 EXPOSE 80
@@ -59,5 +49,5 @@ ENV HTTPS_PROXY=""
 ENV http_proxy=""
 ENV https_proxy=""
 
-CMD ["uvicorn", "src.api:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "80", "--root-path", "."]
+CMD ["uvicorn", "src.api:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "80"]
 #CMD ["tail", "-f", "/dev/null"]

@@ -1,6 +1,7 @@
 """
 Python class containing methods to generate plots for the spatial structure analysis report.
 """
+
 import itertools
 import os
 
@@ -12,6 +13,7 @@ import pandas as pd
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
+import scanpy as sc
 import squidpy as sq
 from distinctipy import distinctipy
 from holoviews import dim, opts
@@ -39,6 +41,7 @@ class PlotGenerator:
         cache_path="",
         report_template_path="",
         scale_factors=None,
+        sp_domains_adata=None,
     ):
         """Initializing PlotGenerator instance variables.
 
@@ -60,6 +63,7 @@ class PlotGenerator:
         self.fig_configs = self.configs["params"]["fig_configs"]
         self.inline_figs = []
         self.report_gen = ReportGenerator(report_template_path)
+        self.sp_domains_adata = sp_domains_adata
 
     def convert_micron(self, pix_distance, spot_size=65.0):
         """
@@ -92,6 +96,46 @@ class PlotGenerator:
             for r, g, b in colors
         ]
         return colors_hex
+
+    def generate_gene_distrib_collage(
+        self, save_location, adata, markers, n, n_rows, n_cols
+    ):
+        """Generates a collage of the distribution plots for the markers specified
+
+        Args:
+            save_location (str): plot temporary save location
+            adata (AnnData): spots anndata object containing the markers
+            markers (list): list of gene markers to plot
+            n_rows (int): number of genes to show
+            n_rows (int): number of rows
+            n_cols (int): number of columns
+
+        Returns:
+            matplotlib figure: figure containing the gene distruibution plots
+        """
+        adata.obsm["spatial"] = np.array(adata.obsm["spatial"])
+        fig, axes = plt.subplots(
+            n_rows, n_cols, figsize=(self.width // 100, self.height // 100)
+        )
+        axes = axes.reshape(n_rows, n_cols)
+        i = 0
+        for row in range(n_rows):
+            for col in range(n_cols):
+                if i == n:
+                    break
+                ax = axes[row, col]
+                marker = markers[i]
+                save_path = save_location.format(marker=marker, i=i)
+                save_path = os.path.join(os.getcwd(), save_path)
+                sq.pl.spatial_scatter(adata, color=[marker], save=save_path)
+                gene_exp_plot = plt.imread(save_path)
+                ax.imshow(gene_exp_plot)
+                ax.set_axis_off()
+                ax.set_aspect("equal")
+                os.remove(save_path)
+                i += 1
+        fig.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
+        return fig
 
     def add_qc_report_button(self, exp_id, flow_id, task_name="qc_report"):
         """Adds button to link to QC report from space ranger
@@ -508,33 +552,15 @@ class PlotGenerator:
             morans_df = morans_df[morans_df["pval_norm"] < pval]
         if not morans_df.empty:
             n = np.minimum(self.params["n_genes_exp"], len(morans_df))
-            highest_corr_markers = morans_df.index.tolist()
-            n_rows = int(np.ceil(n / n_cols))
-            fig, axes = plt.subplots(
-                n_rows, n_cols, figsize=(self.width // 100, self.height // 100)
+            save_location = self.cache_path + self.configs["params"]["morans_save_path"]
+            fig = self.generate_gene_distrib_collage(
+                save_location=save_location,
+                adata=adata,
+                markers=morans_df.index.tolist(),
+                n=n,
+                n_rows=int(np.ceil(n / n_cols)),
+                n_cols=n_cols,
             )
-            axes = axes.reshape(n_rows, n_cols)
-            i = 0
-            for row in range(n_rows):
-                for col in range(n_cols):
-                    if i == n:
-                        break
-                    ax = axes[row, col]
-                    marker = highest_corr_markers[i]
-                    save_path = (
-                        self.cache_path + self.configs["params"]["morans_save_path"]
-                    )
-                    save_path = save_path.format(marker=marker, i=i)
-                    save_path = os.path.join(os.getcwd(), save_path)
-                    sq.pl.spatial_scatter(adata, color=[marker], save=save_path)
-                    gene_exp_plot = plt.imread(save_path)
-                    ax.imshow(gene_exp_plot)
-                    ax.set_axis_off()
-                    ax.set_aspect("equal")
-                    os.remove(save_path)
-                    i += 1
-            fig.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
-            # fig.suptitle(title, fontsize=16)
             configs = dict(self.fig_configs[task_name])
             configs["figure"] = self.report_gen.format_to_html(fig)
             configs["data"] = morans_df
@@ -570,6 +596,103 @@ class PlotGenerator:
                 title="Moran's I",
                 xaxis=dict(title="Gene"),
                 yaxis=dict(title=f"Morans I"),
+            )
+            bar_fig.update_xaxes(tickangle=45)
+            configs = dict(self.fig_configs[task_name])
+            configs["figure"] = self.report_gen.format_to_html(bar_fig)
+            self.inline_figs.append(configs)
+        return bar_fig
+
+    def spatialde_heatmap_plot(
+        self, task_name="spatialde_heatmap", min_count_thresh=1000
+    ):
+        """Generates heatmaps to visualize top spatially variable genes
+        Returns:
+            adata (anndata.AnnData): Spots ann data object.
+        """
+        adata = self.spots_adata
+        fig = None
+        pval = self.params["spatialde_pval"]
+        n_cols = self.params["n_cols"]
+        spatialde_df = pd.DataFrame()
+        data_label = "spatialde"
+        if self.params[task_name] and data_label in adata.uns.keys():
+            logger.info(
+                "<spatialde_heatmap_plot> Generating average gene expression plots"
+            )
+            spatialde_df = adata.uns[data_label]
+            spatialde_raw_df = spatialde_df.copy()
+            # Only showing the siginficantly spatially variable genes
+            significance_flag = spatialde_df["qval"] <= pval
+            spatialde_df = spatialde_df[significance_flag]
+
+            # Only showing genes with atleast min_count_thresh counts
+            valid_counts_flag = spatialde_df["total_counts"] >= min_count_thresh
+            spatialde_df = spatialde_df[valid_counts_flag]
+        if not spatialde_df.empty:
+            n = np.minimum(self.params["n_genes_exp"], len(spatialde_df))
+            # Sort by significance and FSV (Fraction of variance explained by spatial variation)
+            top_genes_by_sig = spatialde_df.sort_values(
+                by=["qval", "FSV"], ascending=[True, False], na_position="first"
+            )
+            # Showing the top n genes by spatial variance
+            genes_to_render = top_genes_by_sig["g"].tolist()[:n]
+
+            save_location = (
+                self.cache_path + self.configs["params"]["spatialde_save_path"]
+            )
+            fig = self.generate_gene_distrib_collage(
+                save_location=save_location,
+                adata=adata,
+                markers=genes_to_render,
+                n=n,
+                n_rows=int(np.ceil(n / n_cols)),
+                n_cols=n_cols,
+            )
+            configs = dict(self.fig_configs[task_name])
+            configs["figure"] = self.report_gen.format_to_html(fig)
+            configs["data"] = spatialde_raw_df
+            configs["name"] = task_name
+            self.inline_figs.append(configs)
+        return fig
+
+    def spatialde_bar_plot(self, task_name="spatialde_bar", min_count_thresh=1000):
+        """
+        Generates SpatialDE bar plot
+        Returns:
+            adata (anndata.AnnData): Spots ann data object.
+        """
+        adata = self.spots_adata
+        bar_fig = None
+        pval = self.params["spatialde_pval"]
+        spatialde_df = pd.DataFrame()
+        data_label = "spatialde"
+        if self.params[task_name] and data_label in adata.uns.keys():
+            logger.info("<spatialde_bar_plot> Generating SpatialDE bar plot")
+            spatialde_df = adata.uns[data_label]
+            spatialde_raw_df = spatialde_df.copy()
+            # Only showing the siginficantly spatially variable genes
+            significance_flag = spatialde_df["qval"] <= pval
+            spatialde_df = spatialde_df[significance_flag]
+
+            # Only showing genes with atleast min_count_thresh counts
+            valid_counts_flag = spatialde_df["total_counts"] >= min_count_thresh
+            spatialde_df = spatialde_df[valid_counts_flag]
+        if not spatialde_df.empty:
+            n = np.minimum(self.params["n_genes_bar"], len(spatialde_df))
+            # Sort by significance and FSV (Fraction of variance explained by spatial variation)
+            top_genes_by_sig = spatialde_df.sort_values(
+                by=["qval", "FSV"], ascending=[True, False], na_position="first"
+            )
+
+            # Create a plotly barplot of the number of cells per cell type
+            df = top_genes_by_sig.head(n)
+            bar_fig = px.bar(df, x=df.g, y=df.FSV, height=self.height, width=self.width)
+            # Add title
+            bar_fig.update_layout(
+                title="SpatialDE Results",
+                xaxis=dict(title="Gene"),
+                yaxis=dict(title=f"FSV"),
             )
             bar_fig.update_xaxes(tickangle=45)
             configs = dict(self.fig_configs[task_name])
@@ -926,6 +1049,35 @@ class PlotGenerator:
             configs["figure"] = self.report_gen.format_to_html(fig)
             self.inline_figs.append(configs)
         return fig, infiltrating_cells
+
+    def bansky_domains_plot(self):
+        self.sp_domains_adata.obs["banksy_spatial_domains"] = [
+            "dom_" + str(i) for i in self.sp_domains_adata.obs["banksy_labels"]
+        ]
+        fig, ax = plt.subplots(figsize=(self.width // 100, self.height // 100))
+        # Generate the spatial scatter plot and save it temporarily
+        save_location = self.cache_path + self.configs["params"]["bansky_save_path"]
+        save_path = save_location.format(marker="banksy_spatial_domains")
+        save_path = os.path.join(os.getcwd(), save_path)
+        sq.pl.spatial_scatter(
+            self.sp_domains_adata, color=["banksy_spatial_domains"], save=save_path
+        )
+        # Read the saved plot and display it in the subplot
+        spatial_domain_plot = plt.imread(save_path)
+        ax.imshow(spatial_domain_plot)
+        ax.set_axis_off()
+        ax.set_aspect("equal")
+        # Remove the temporary file
+        os.remove(save_path)
+        # Adjust layout
+        fig.tight_layout(pad=0.1)
+        task_name = "bansky_spatial_domains"
+        configs = dict(self.fig_configs[task_name])
+        configs["figure"] = self.report_gen.format_to_html(fig)
+        configs["data"] = self.sp_domains_adata.obs
+        configs["name"] = task_name
+        self.inline_figs.append(configs)
+        return fig
 
     def get_report(self, exp_id, report_name):
         """Populates the report

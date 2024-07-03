@@ -20,7 +20,6 @@ from src.pipelines.dataio_pipeline import DataIO
 from src.pipelines.datamerge_pipeline import DataMerge
 from src.pipelines.imgseg_cellpose_pipeline import ImageSeg
 from src.pipelines.imgseg_hovernet_pipeline import HoverNet
-
 from src.pipelines.param_pipeline import ParamPipeline
 from src.pipelines.qc_pipeline import QC
 from src.pipelines.spatial_one_flow import SpatialOneFlow
@@ -298,7 +297,7 @@ class VisiumFlow(SpatialOneFlow):
                 results_dir=data_io.results_dir,
                 deconv_method=self.configs["celldeconv"]["model"]["name"],
             )
-
+            assign_celltype.confidence_metrics()
             assign_celltype.save_data(results_dir=data_io.results_dir)
 
         else:
