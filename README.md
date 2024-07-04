@@ -9,7 +9,7 @@ SpatialOne leverages a modular approach to provide flexibility and extensibility
   <!---<p><em>SpatialOne uses SpaceRanger for expression processing and cell segmentation and cell deconvolution methods to determine cell types. Using the cell location estimation, it generates descriptive analytics, an HTML spatial structure report, compares regions of interest if provided, and displays results in the TissUUmaps interactive viewer</em></p>!-->
 </div>
 
-This repository contains the code and dockefiles to replicate results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers. This section provides details on how to run end-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic) using docker.
+This repository also contains the code and dockefiles to replicate the results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and run end-to-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers.
 
 - [System Requirements](#system-requirements)
 - [Setup](#setup)
@@ -19,8 +19,11 @@ This repository contains the code and dockefiles to replicate results present in
     - [Output files for Spatial One](#output-files-for-spatial-one)
   - [Set Up Environment](#2-set-up-environment)
   - [Building Docker Images](#3-building-docker-images)
-- [Running Analysis with SpatialOne](#running-analysis-with-spatialone)
+- [Running an Analysis with SpatialOne](#running-an-analysis-with-spatialone)
 - [Visualizing Outputs in TissUUmaps](#visualizing-outputs-in-tisuumaps)
+- [Cell-type Estimation Limitations](#cell-type-estimation-limitations)
+- [SpatialOne Tutorials](#spatialone-tutorials)
+  - [Reproducing SpatialOne Manuscript Results](#reproducing-spatialone-manuscript-results)
 
 ## System requirements
 
@@ -220,9 +223,12 @@ The docker build step can take up to 20 minutes and will need about 12-15 GB to 
 
 Alternatively, you can also pull the SpatialOne light version image (which does not support CARD and Hovernet) directly from Dockerhub:
 
+```sh
     docker pull albertpla/spatialone_amd:latest
+    docker tag albertpla/spatialone_amd:latest spatialone-pipeline:latest # This will rename the docker image to be coherent with the spatialone setup
+```
 
-## Running analysis with SpatialOne
+## Running an analysis with SpatialOne
 Before runing the analysis, ensure that **HOST_DATA_PATH** and **GPU_DEVICE_ID** variables are set up appropriately in the ".env" file of the respository. The configurations under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_ will be used for running SpatialOne; please review the configurations before running the commmand below.
 
 Run SpaitalOne using the following command:
@@ -235,7 +241,7 @@ or (for cpu only machines)
 
 You will then see the progress logs in the terminal, and outputs will be produced to HOST_DATA_PATH/results/{sample_id}.
 
-### Run light version of SpatialOne
+### Running the light version of SpatialOne
 
 The following commands can be used to run a light version of the spatialone pipeline (note: **CARD** or **Hovernet** are _**not**_ supported in this version). For GPU-enabled machines, use _"make run"_. Otherwise, use the command _"make run-cpu"_. Please ensure that the configurations are set correctly under "_HOST_DATA_PATH/conf/visium_config_flow.yaml"_ (celldeconv - cell2location only, imgseg - cellpose only), and that the _HOST_DATA_PATH_ and _GPU_DEVICE_ID_ variables are appropriately set up in the **_.env_** file.
 
@@ -244,10 +250,12 @@ The following commands can be used to run a light version of the spatialone pipe
       make run-cpu # or, cpu only version
 
 Alternatively, you can also pull the docker image directly from Dockerhub:
-
+```sh
       docker pull albertpla/spatialone_amd:latest
+      docker tag albertpla/spatialone_amd:latest spatialone-pipeline:latest # This will rename the docker image to be coherent with the spatialone setup
       make run # gpu version
       make run-cpu # or, cpu only version
+```
 
 ## Visualizing Outputs in TisUUmaps
 
@@ -255,3 +263,46 @@ To visualize SpatialOne outputs in TissUUmaps, follow these instructions:
 1. Install TissUUmaps following its official [instructions](https://tissuumaps.github.io/installation/)
 2. Run TissUUmaps
 3. Load the .tmaps file saved at "<HOST_DATA_PATH>/results/experiment_name/experiment_tmap.tmap"
+
+## Cell-type Estimation Limitations
+SpatialOne currently is limited to Visium technology.
+Visium's technology limitations can impact the accuracy of cell abundance estimation, especially for spot-based methods that might involve partially captured cells. This issue is crucial during the cell deconvolution step, where distorted cell proportions can affect results. Similarly, we acknowledge that cell morphology alone cannot be used to accurately identify certain cell types, especially when differentiating between subtypes. The cell type estimation method does not aim to impute gene expression per cell as other methods claim. Given Visium technology limitations, this can lead to unrealistic scenarios. Instead, we provide realistic cell counts and distributions across tissue spots, enabling structural analysis based on cell positioning. Considering the potential error of ±55 µm in cell positioning is due to the Visium spot size, we recommend using cell type estimation to analyze broader areas and not focus on specific spot results. To help users understand labeling accuracy and limitations, SpatialOne includes uncertainty metrics about the cell positioning estimates, such as the relative entropy of the spot, the silhouette scores of clustering, as well as a confidence score that combines both of these measurements.
+ As future work, we plan to expand the SpatialOne to support other ST technologies like VisiumHD, Xenium, or CosMx.
+
+# SpatialOne Tutorials
+
+Here we present step-by-step tutorials on how to run SpatialOne with the public datasets available at [Zenodo](https://zenodo.org/records/12605154):
+
+- Reproduce SpatialOne Manuscript results
+- Analysis of a [Lung Cancer Squamous Cell Carcinoma](https://www.10xgenomics.com/datasets/human-lung-cancer-ffpe-2-standard) using SpatialOne
+
+**Assumptions:**
+These tutorials assume that the user has docker installed in the machine used to run the experiments. Such machine should fulfill the requirements defined in the [system requirements section](#system-requirements).
+
+
+### Reproducing SpatialOne Manuscript Results
+The simplest way to reproduce the analysis on SpatialOne's manuscript, is to checkout the code respository from GitHub and execute the _run instructions_ bash script. We reccommend to run this analysis using a GPU-enabled machine.
+This script will:
+1. Download the required data
+2. Build a docker image
+3. Run the spatial analysis in the 5 samples mentioned in the paper.
+
+GPU Execution:
+
+    git clone https://github.com/Sanofi-Public/spatialone-pipeline.git
+    cd spatialone-pipeline
+    ./run_instructions_SO.sh --gpu
+
+CPU execution:
+
+    git clone https://github.com/Sanofi-Public/spatialone-pipeline.git
+    cd spatialone-pipeline
+    ./run_instructions_SO.sh --cpu
+
+If the analysis is successful, it will generate results analogous to the ones uploaded to [Zenodo](https://zenodo.org/records/12628376).
+
+Note that as SpatialOne relies on PyTorch, which [does not ensure reproducibility between CPU and GPU executions](https://pytorch.org/docs/stable/notes/randomness.html), there may be minor differences in cell deconvolution, leading to variations in downstream analysis.
+
+### Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample
+This [tutorial](docs_md/e2e_tutorial.md) provides a step-by-step guide on how to analyze a [10x sample dataset](https://www.10xgenomics.com/datasets/human-lung-cancer-11-mm-capture-area-ffpe-2-standard) consisting on a FFPE human lung cancer tissue diagnosed with _Neuroendocrine Carcinoma_:
+- [Access tutorial](docs_md/e2e_tutorial.md)
