@@ -14,14 +14,14 @@ pipelines.enabled:
     # Note that there may be dependencies between pipelines, if basic pipelines like
     # celldeconv or imgseg are set to FALSE, the succeeding pipelines will only execute
     # if there are previous celldeconv or imgseg available in the results folder
-    imgseg: True     # cell segmentation
-    cell2spot: True  # matching cells to visium spots
-    celldeconv: True # cell deconvoluiton
-    cluster: True    # morphological clustering
-    assign: True     # cell assignment integrates celldeconvolution with cell segmentation
-    qc: True         # QC metrics generation
-    datamerge: True  # To visualize in Tissuumaps enable "datamerge: true"
-    spatialanalysis: True # Spatial analysis reporting
+    imgseg: False     # cell segmentation
+    cell2spot: False  # matching cells to visium spots
+    celldeconv: False # cell deconvoluiton
+    cluster: False    # morphological clustering
+    assign: False     # cell assignment integrates celldeconvolution with cell segmentation
+    qc: False         # QC metrics generation
+    datamerge: False  # To visualize in Tissuumaps enable "datamerge: true"
+    spatialanalysis: False # Spatial analysis reporting
 imgseg:
     # Select the imagesegmentation method to be used and define its parameters
     image.resolution: "400dpi" # information tracked as metada, not used in the analysis
@@ -53,6 +53,8 @@ imgseg:
         #     wsi: True                 # Analyze the whole slide
         #     tile: False               # Analyze the tiles independenlty
         #     help: False               # must be set to false
+        #     model_name: "hovernet_original_consep_type_tf2pytorch.tar" # can be replaced with custom model
+        #     type_filename: "type_info.json" # can be replaced with custom labels
 cell2spot:
     # Pipeline that will assign segmented cells to their correspondent spots. no need to configure it
     model:

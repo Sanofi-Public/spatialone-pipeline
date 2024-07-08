@@ -1,18 +1,26 @@
 """
 Python class to run spatial structure analysis.
 """
+
 # pylint:disable=no-member
 
 import json
 import os
-from collections import defaultdict
+import random
+from collections import OrderedDict, defaultdict
 from datetime import datetime
 
 import anndata as ad
 import hydra
+import NaiveDE
 import numpy as np
 import pandas as pd
+import scanpy as sc
+import SpatialDE
 import squidpy as sq
+from banksy.initialize_banksy import initialize_banksy
+from banksy.run_banksy import run_banksy_multiparam
+from banksy_utils.color_lists import spagcn_color
 from dotenv import load_dotenv
 from omegaconf import OmegaConf
 from PIL import Image
@@ -79,6 +87,48 @@ class SpatialAnalysis:
         sf_path = prep_dir + "scalefactors_json.json"
         with open(sf_path, "r", encoding="utf-8") as spot_geometry_file:
             self.scale_factors = json.loads(spot_geometry_file.read())
+
+        logger.info("<load_data> load tissue position table")
+        vs_headings = [
+            "barcode",
+            "in_tissue",
+            "array_row",
+            "array_col",
+            "pxl_row_in_fullres",
+            "pxl_col_in_fullres",
+        ]
+        pos_filename = "tissue_positions_list.csv"
+        tissue_positions = pd.read_csv(
+            prep_dir + pos_filename,
+            header=0,
+            names=vs_headings,
+        )
+        tissue_positions = tissue_positions[
+            tissue_positions["in_tissue"].astype(int) == 1
+        ]
+        tissue_positions.set_index("barcode", inplace=True)
+
+        logger.info("<load_data> load gene expression data")
+        adata_st = sc.read_10x_h5(f"{prep_dir + 'filtered_feature_bc_matrix.h5'}")
+        adata_st.obs = adata_st.obs.join(tissue_positions, how="left")
+        spatial = {
+            "Visium": {
+                "images": {
+                    "hires": np.array(self.hires),
+                    "lowres": np.array(self.lowres),
+                },
+                "scalefactors": self.scale_factors,
+            }
+        }
+        adata_st.uns = OrderedDict({"spatial": spatial})
+        adata_st.obsm["spatial"] = adata_st.obs[
+            ["pxl_col_in_fullres", "pxl_row_in_fullres"]
+        ].to_numpy()
+        adata_st.obs.drop(
+            columns=["pxl_row_in_fullres", "pxl_col_in_fullres"],
+            inplace=True,
+        )
+        self.adata_st = adata_st
 
         logger.info("<load_data> load expert annotations file")
         annotations_path = prep_dir + "annotations.geojson"
@@ -440,6 +490,76 @@ class SpatialAnalysis:
         adata.uns[f"{mode}_moranI"] = adata.uns["moranI"]
         return adata
 
+    def spatialde_analysis(
+        self, adata, level="tissue", mode="gene", max_num_genes=3000
+    ):
+        """
+        Runs SpatialDE on the spots AnnData object.
+        """
+        logger.info(
+            "<spatialde_analysis> Running SpatialDE on the spots AnnData object"
+        )
+        params = self.configs["params"][level]
+        run_flag = params[f"spatialde_heatmap"] or params[f"spatialde_bar"]
+        if not run_flag or level == "region" or mode == "cell":
+            return adata
+        else:
+            # get counts matrix
+            gene_adata = adata[:, adata.uns["gene_columns"]]
+            gene_counts_df = pd.DataFrame(
+                gene_adata.X, columns=gene_adata.var_names, index=gene_adata.obs_names
+            ).astype(int)
+
+            # If more than max_num_genes specified, only run SpatialDE on
+            # top max_num_genes by total gene count
+            if len(gene_counts_df.columns) > max_num_genes:
+                top_expressed_genes = (
+                    gene_adata.var["sum_counts"]
+                    .sort_values(ascending=False)[:max_num_genes]
+                    .index.tolist()
+                )
+                gene_counts_df = gene_counts_df[top_expressed_genes]
+
+            # Get spot locations
+            spot_locations_df = pd.DataFrame(
+                gene_adata.obsm["spatial"],
+                columns=["x", "y"],
+                index=gene_adata.obs_names,
+            )
+            spot_locations_df["total_counts"] = (
+                gene_adata.X.sum(axis=1).astype(int).tolist()
+            )
+
+            # Only keeping barcodes that have non-zero gene counts
+            valid_barcodes = spot_locations_df[
+                spot_locations_df.total_counts > 0
+            ].index.tolist()
+            spot_locations_df = spot_locations_df.loc[valid_barcodes]
+            gene_counts_df = gene_counts_df.loc[valid_barcodes]
+
+            # Normalize the gene counts
+            norm_expr = NaiveDE.stabilize(gene_counts_df.T).T
+            resid_expr = NaiveDE.regress_out(
+                spot_locations_df, norm_expr.T, "np.log(total_counts)"
+            ).T
+
+            # Run SpatialDE
+            spatialde_results = SpatialDE.run(
+                spot_locations_df[["x", "y"]].to_numpy(), resid_expr
+            )
+
+            # Adding gene counts to results
+            gene_counts = pd.DataFrame(
+                gene_counts_df.sum(axis=0), columns=["total_counts"]
+            )
+            spatialde_results = spatialde_results.merge(
+                gene_counts, how="left", left_on="g", right_index=True
+            )
+
+            # Adding results to anndata object
+            adata.uns[f"spatialde"] = spatialde_results
+            return adata
+
     def summarize_cells_within_spots(self, cells_df=None, drop_not_deconvolved=True):
         """
         Summarize cells_df at barcode and cell_type level.
@@ -578,6 +698,75 @@ class SpatialAnalysis:
             ]
         return region_cells_df
 
+    def run_bansky(self, level="tissue"):
+        """Run Bansky - spatial domains analysis.
+
+        Returns:
+        """
+        logger.info(
+            "<spatial_domains_analysis> Running BANSKY spatial domains algorithm"
+        )
+        # Set Bansky parameters
+        params = self.configs["params"][level]
+        run_flag = params[f"bansky_spatial_domains"]
+        if not run_flag or level == "region":
+            return None
+        else:
+            random_seed = params["random_seed"]
+            cluster_algorithm = params["bansky_cluster_algorithm"]
+            np.random.seed(random_seed)
+            random.seed(random_seed)
+            coord_keys = ("array_col", "array_row", "spatial")
+            num_clusters = params["bansky_num_clusters"]
+            resolutions = params["bansky_resolutions"]
+            pca_dims = params["bansky_pca_dims"]
+            lambda_list = params["bansky_lambda_list"]
+            k_geom = params["bansky_k_geom"]
+            max_m = params["bansky_max_m"]
+            nbr_weight_decay = params["bansky_nbr_weight_decay"]
+            # Initialize Bansky
+            output_folder = self.report_directory
+            try:
+                banksy_dict = initialize_banksy(
+                    self.adata_st,
+                    coord_keys,
+                    k_geom,
+                    nbr_weight_decay=nbr_weight_decay,
+                    max_m=max_m,
+                    plt_edge_hist=False,
+                    plt_nbr_weights=False,
+                    plt_agf_angles=False,
+                    plt_theta=False,
+                )
+                results_df = run_banksy_multiparam(
+                    self.adata_st,
+                    banksy_dict,
+                    lambda_list,
+                    resolutions,
+                    color_list=spagcn_color,
+                    max_m=max_m,
+                    filepath=output_folder,
+                    key=coord_keys,
+                    pca_dims=pca_dims,
+                    annotation_key=None,
+                    max_labels=num_clusters,
+                    cluster_algorithm=cluster_algorithm,
+                    match_labels=False,
+                    savefig=False,
+                    add_nonspatial=False,
+                    variance_balance=False,
+                )
+                # Add Bansky labels
+                self.adata_st.obs["banksy_labels"] = results_df.labels.iloc[0].dense
+                sp_domains_adata = self.adata_st
+            except Exception as e:
+                logger.warning(
+                    "<spatial_domains_analysis> Skipping BANSKY spatial domains algorithm due to an error: %s",
+                    e,
+                )
+                sp_domains_adata = None
+            return sp_domains_adata
+
     def run_spatial_analysis(
         self,
         exp_id,
@@ -632,6 +821,10 @@ class SpatialAnalysis:
         spots_adata = self.morans_i_analysis(
             adata=spots_adata, level=level, mode="cell"
         )
+        spots_adata = self.spatialde_analysis(
+            adata=spots_adata, level=level, mode="gene"
+        )
+        sp_domains_adata = self.run_bansky(level=level)
 
         # Comparative analysis
         params = self.configs["params"][level]
@@ -669,6 +862,7 @@ class SpatialAnalysis:
             spots_df=spots_df,
             region_name=region_name,
             level=level,
+            sp_domains_adata=sp_domains_adata,
         )
         return report, cells_adata, spots_adata
 
@@ -742,6 +936,7 @@ class SpatialAnalysis:
         spots_df=None,
         region_name=None,
         level="tissue",
+        sp_domains_adata=None,
     ):
         """Calls the methods in report_generator.py to create a spatial structure analysis report.
 
@@ -773,6 +968,7 @@ class SpatialAnalysis:
             cache_path=self.report_directory,
             report_template_path=self.report_template_path,
             scale_factors=self.scale_factors,
+            sp_domains_adata=sp_domains_adata,
         )
         plot_gen.add_qc_report_button(exp_id=exp_id, flow_id=flow_id)
         plot_gen.cell_summary_table(df=spot_stats)
@@ -785,6 +981,10 @@ class SpatialAnalysis:
         plot_gen.morans_i_bar_plot(task_name="morans_gene_bar", mode="gene")
         plot_gen.morans_i_exp_plots(task_name="morans_cell_heatmap", mode="cell")
         plot_gen.morans_i_bar_plot(task_name="morans_cell_bar", mode="cell")
+        plot_gen.spatialde_heatmap_plot()
+        plot_gen.spatialde_bar_plot()
+        if sp_domains_adata is not None:
+            plot_gen.bansky_domains_plot()
         plot_gen.cooccurrence_plots()
         plot_gen.volcano_plots(task_name="diff_exp_annotations")
         plot_gen.volcano_plots(task_name="diff_exp_clusters")
@@ -795,7 +995,6 @@ class SpatialAnalysis:
         if level == "tissue":
             # Exporting figure content to .csv files
             self.export_downstream_analysis_to_csv(plot_gen.inline_figs)
-        return report
         return report
 
     def add_files_to_configs(self, bucket, file_names, extension, file_type="outputs"):

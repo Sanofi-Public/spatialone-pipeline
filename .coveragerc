@@ -3,6 +3,7 @@
 omit =
     src/image_analysis/**
     src/pipelines/**
+    src/spatial_report_generator/**
     src/utils/data_loader.py
     src/utils/data_saver.py
     src/utils/image_processing_utils.py

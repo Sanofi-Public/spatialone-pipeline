@@ -7,10 +7,18 @@ setup-env:
 	pre-commit install
 	pip install scalene
 
+install-local:
+	sudo apt-get update && sudo apt-get install libatlas-base-dev liblapack-dev libblas-dev -y
+	sudo apt-get install -y libgl1-mesa-glx
+	sudo apt-get install -y libglib2.0-0
+	python3 -m pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118
+	python3 -m pip install -r requirements.txt --no-cache-dir --user
+
 install:
 	apt-get update && apt-get install libatlas-base-dev liblapack-dev libblas-dev -y
 	apt-get install -y libgl1-mesa-glx
 	apt-get install -y libglib2.0-0
+	python3 -m pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118
 	python3 -m pip install -r requirements.txt --no-cache-dir --user
 
 install-arm:

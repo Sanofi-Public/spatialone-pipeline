@@ -8,6 +8,7 @@ import hydra
 from dotenv import load_dotenv
 from omegaconf import OmegaConf
 
+from src.image_analysis.clustering.confidence_metrics import compute_confidence_metrics
 from src.image_analysis.clustering.feature_extraction import extract_image_features
 from src.image_analysis.clustering.spot_clustering import (
     assign_celltype,
@@ -171,6 +172,13 @@ class SpotCluster:
                     f"<Spot clustering>  - Algorithm {self.model_name} not supported"
                 )
 
+    def confidence_metrics(self):
+        """Compute confidence metrics"""
+        logger.info("<Spot clustering> computing confidence metrics")
+        self.barcodes = self.barcodes.groupby(by=["barcode"], as_index=False).apply(
+            compute_confidence_metrics
+        )
+
     def save_data(self, results_dir):
         """Save data from clustering"""
         logger.info("<save-data> save assigned cell types")
@@ -218,6 +226,7 @@ if __name__ == "__main__":
         results_dir=data_io.results_dir,
         deconv_method=config_flow["celldeconv"]["model"]["name"],
     )
+    assign_celltype.confidence_metrics()
     assign_celltype.save_data(results_dir=data_io.results_dir)
 
     # # Push all output files from local cache to s3

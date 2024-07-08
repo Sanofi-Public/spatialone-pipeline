@@ -3,7 +3,7 @@
 This page lists the different parameters that can be used at each SpatialOne module.
 
 ```mermaid
-flowchart LR	
+flowchart LR
     A["Visium\nExperiment"] -- High Resolution\n Image --> CS("Cell\nSegmentation")
     A -- Spot Transcripts --> CD("Cell\nDeconvolution") & QC("Quality Control")
     CS -- Segmented\nCells --> CA("Cell\nEstimation")
@@ -53,7 +53,7 @@ flowchart LR
     - [Basic Parameters](#region-analysis-basic-parameters)
     - [Advanced Parameters](#region-analysis-advanced-parameters)
 
-## Cell Segmentation  
+## Cell Segmentation
 SpatialOne's cell segmentation module implements Cellpose and Hovernet.
 ### Cellpose
 Cellpose is a generalist, deep learning-based cell segmentation algorithm designed to accurately identify and segment cells in microscopy images. SpatialOne uses the nuclei model for its analysis. To set it up make sure to provide the adjust the downsample_factor to align with the magnification of your images.
@@ -97,7 +97,7 @@ Hovernet is a deep learning-based cell segmentation algorithm designed to simult
 SpatialOne can deconvolute cells using Cell2Location and CARD.
 
 ### Cell2Location
-Cell2Location is a probabilistic cell deconvolution algorithm that uses single-cell RNA sequencing data to map cell types in spatial transcriptomics data. To set it up, make sure to define an appropriate appropriate single cell reference dataset so the spatial data expression profiles can be compared with individual sc-gene expression profiles. 
+Cell2Location is a probabilistic cell deconvolution algorithm that uses single-cell RNA sequencing data to map cell types in spatial transcriptomics data. To set it up, make sure to define an appropriate appropriate single cell reference dataset so the spatial data expression profiles can be compared with individual sc-gene expression profiles.
 
 Please refer to the official [documentation](https://cell2location.readthedocs.io/en/latest/) for additional details.
 

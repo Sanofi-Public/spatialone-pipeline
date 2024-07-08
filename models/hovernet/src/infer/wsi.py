@@ -808,9 +808,8 @@ class InferManager(base.InferManager):
         """
         Creates a cells outlines layer
         """
-        src = rasterio.open(wsi_path)
-        wsi_shape = src.shape
-        src.close()
+        with rasterio.open(wsi_path) as src:
+            wsi_shape = src.shape
         cells_mask = np.zeros(shape=wsi_shape)
         cells_polys = (
             cell_predictions["contour"].apply(lambda row: np.int64(row)).tolist()
@@ -833,13 +832,11 @@ class InferManager(base.InferManager):
                 'type_prob',
                 'type'
         """
-        f = open(pred_path)
-        data = json.load(f)
-        f.close()
+        with open(pred_path) as f:
+            data = json.load(f)
 
-        f = open(type_info_path)
-        labels_dict = json.load(f)
-        f.close()
+        with open(type_info_path) as f:
+            labels_dict = json.load(f)
 
         if not os.path.exists(save_path):
             rm_n_mkdir(save_path)
