@@ -24,6 +24,7 @@ This repository also contains the code and dockefiles to replicate the results p
 - [Cell-type Estimation Limitations](#cell-type-estimation-limitations)
 - [SpatialOne Tutorials](#spatialone-tutorials)
   - [Reproducing SpatialOne Manuscript Results](#reproducing-spatialone-manuscript-results)
+  - [Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample](#analysis-of-10xs-lung-cancer-squamous-cell-carcinoma-sample)
 
 ## System requirements
 
