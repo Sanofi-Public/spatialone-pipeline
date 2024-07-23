@@ -9,11 +9,23 @@ git clone https://github.com/Sanofi-Public/spatialone-pipeline.git
 cd spatialone-pipeline
 ```
 
-## 2. Download Sample Data
+## 2. Download Required Data
+
+### 2.1. Sample Data
 Download the two cancer samples, the reference data for deconvolution, and the default configuration files.
 ```bash
 ./download_experiment_data.sh
 ```
+
+### 2.2. Downlaod Hovernet Weights
+Hovernet can work with different weights, as described in their [official repository]([https://drive.google.com/drive/folders/17IBOqdImvZ7Phe0ZdC5U1vwPFJFkttWp](https://github.com/vqdang/hover_net?tab=readme-ov-file#model-weights)). To use the CONSEP weights described in the SpatialOne paper you should download them on the reference folder.
+
+You can manually download them from the [author's site](https://drive.google.com/drive/folders/17IBOqdImvZ7Phe0ZdC5U1vwPFJFkttWp) or you can execute the following two instructions:
+```bash
+curl -L -o reference/hovernet_original_consep_type_tf2pytorch.tar "https://zenodo.org/records/10854151/files/hovernet_original_consep_type_tf2pytorch.tar?download=1"
+curl -L -o reference/type_info.json "https://zenodo.org/records/10854151/files/type_info.json?download=1"
+```
+
 
 ## 3. Set Up the Environment
 Prepare your environment to build the container images if necessary. To that end, edit the `.env` file:
