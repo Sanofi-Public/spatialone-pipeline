@@ -90,6 +90,7 @@ imgseg:
             model_name: "hovernet_original_consep_type_tf2pytorch.tar"
             type_filename: "type_info.json"
 ```
+Please note that if you plan to use a different set of weights than _hovernet_original_consep_type_tf2pytorch_ you should update the `model_name` and the `type_filename` parameters.
 
 ### 5.3 Set Up CARD Configuration
 
