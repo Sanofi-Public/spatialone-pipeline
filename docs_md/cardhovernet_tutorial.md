@@ -3,21 +3,20 @@
 For this tutorial, we assume the user is using the following path and has Docker properly set up: `/home/user/card_demo`. It is also assumed that the user has access to a machine with a GPU and the right memory set up.
 
 ## 1. Retrieve the Code
-
+Donwload the code from the github repository
 ```bash
 git clone https://github.com/Sanofi-Public/spatialone-pipeline.git
 cd spatialone-pipeline
 ```
 
 ## 2. Download Sample Data
-
+Download the two cancer samples, the reference data for deconvolution, and the default configuration files.
 ```bash
 ./download_experiment_data.sh
 ```
 
 ## 3. Set Up the Environment
-
-Edit the `.env` file if necessary:
+Prepare your environment to build the container images if necessary. To that end, edit the `.env` file:
 ```env
 HOST_DATA_PATH = /home/user/card_demo/spatialone-pipeline
 GPU_DEVICE_ID = 0
@@ -31,14 +30,15 @@ export HTTPS_PROXY=http://your.proxy.url:port
 
 ## 4. Build the Docker Image
 
-Build Docker containers:
+Build the docker containers:
 ```bash
 make docker-build
 ```
+Note that this operation may take up to 20 minutes
 
 ## 5. Edit the Configuration Files
 
-Edit the config file located at `./conf/visium_config_flow.yaml` to reflect an appropriate configuration.
+Edit the config file located at `./conf/visium_config_flow.yaml` to reflect an appropriate configuration. You'll need to define the pipelines to run, and set up Hovernet & CARD.
 
 ### 5.1 Enable All Pipelines
 
