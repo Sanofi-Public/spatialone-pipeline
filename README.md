@@ -25,6 +25,7 @@ This repository also contains the code and dockefiles to replicate the results p
 - [SpatialOne Tutorials](#spatialone-tutorials)
   - [Reproducing SpatialOne Manuscript Results](#reproducing-spatialone-manuscript-results)
   - [Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample](#analysis-of-10xs-lung-cancer-squamous-cell-carcinoma-sample)
+  - [SpatialOne Analysis using Hovernet and Card](#spatialone-analysis-using-hovernet-and-card)
 
 ## System requirements
 
@@ -83,8 +84,8 @@ We recommend placing the "data/" folder in the same level of directory as the sp
 
     -  reference atlas
     - cell signature files - (can be added automatically when retrain_cell_sig: True is set)
-    - pre-trained model (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
-    - label info (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/type_info.json?download=1)
+    - pre-trained model (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/12801948/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
+    - label info (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/12801948/files/type_info.json?download=1)
 
 #### **Setting up the analysis configuration:**
 In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file.
@@ -276,6 +277,7 @@ Here we present step-by-step tutorials on how to run SpatialOne with the public 
 
 - Reproduce SpatialOne Manuscript results
 - Analysis of a [Lung Cancer Squamous Cell Carcinoma](https://www.10xgenomics.com/datasets/human-lung-cancer-ffpe-2-standard) using SpatialOne
+- Execution of a SpatialOne analysis using Card & Hovernet as deconvolution and segmentation methods
 
 **Assumptions:**
 These tutorials assume that the user has docker installed in the machine used to run the experiments. Such machine should fulfill the requirements defined in the [system requirements section](#system-requirements).
@@ -307,3 +309,8 @@ Note that as SpatialOne relies on PyTorch, which [does not ensure reproducibilit
 ### Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample
 This [tutorial](docs_md/e2e_tutorial.md) provides a step-by-step guide on how to analyze a [10x sample dataset](https://www.10xgenomics.com/datasets/human-lung-cancer-11-mm-capture-area-ffpe-2-standard) consisting on a FFPE human lung cancer tissue diagnosed with _Neuroendocrine Carcinoma_:
 - [Access tutorial](docs_md/e2e_tutorial.md)
+
+### SpatialOne Analysis using Hovernet and Card
+This [tutorial](docs_md/cardhovernet_tutorial.md) provides a step-by-step guide on how to analyze a [10x sample dataset](https://www.10xgenomics.com/datasets/human-lung-cancer-11-mm-capture-area-ffpe-2-standard) consisting on a FFPE human lung cancer tissue diagnosed with _Neuroendocrine Carcinoma_ using Hovernet & Card as the cell segmentation and cell deconvolution mehtods:
+- [Access tutorial](docs_md/cardhovernet_tutorial.md)
+
