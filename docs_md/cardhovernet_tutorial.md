@@ -57,14 +57,14 @@ Edit the config file located at `$HOST_DATA_PATH/conf/visium_config_flow.yaml` (
 Ensure that all the pipelines are enabled:
 ```yaml
 pipelines.enabled:
-    imgseg: False     # cell segmentation
-    cell2spot: False  # matching cells to visium spots
-    celldeconv: False # cell deconvoluiton
-    cluster: False    # morphological clustering
-    assign: False     # cell assignment integrates celldeconvolution with cell segmentation
-    qc: False         # QC metrics generation
-    datamerge: False  # To visualize in Tissuumaps enable "datamerge: true"
-    spatialanalysis: False # Spatial analysis reporting
+    imgseg: True     # cell segmentation
+    cell2spot: True  # matching cells to visium spots
+    celldeconv: True # cell deconvoluiton
+    cluster: True    # morphological clustering
+    assign: True     # cell assignment integrates celldeconvolution with cell segmentation
+    qc: True         # QC metrics generation
+    datamerge: True  # To visualize in Tissuumaps enable "datamerge: true"
+    spatialanalysis: True # Spatial analysis reporting
 ```
 
 ### 5.2 Enable Hovernet Configuration
