@@ -83,8 +83,8 @@ We recommend placing the "data/" folder in the same level of directory as the sp
 
     -  reference atlas
     - cell signature files - (can be added automatically when retrain_cell_sig: True is set)
-    - pre-trained model (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
-    - label info (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/10854151/files/type_info.json?download=1)
+    - pre-trained model (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/12801948/files/hovernet_original_consep_type_tf2pytorch.tar?download=1)
+    - label info (if using Hovernet) - default model can be found [here for download](https://zenodo.org/records/12801948/files/type_info.json?download=1)
 
 #### **Setting up the analysis configuration:**
 In order to configure the SpatialOne spatial analaysis, the user needs to define the configuration in a YAML file.
