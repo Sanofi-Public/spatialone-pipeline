@@ -106,10 +106,10 @@ celldeconv:
             ct_varname: 'cellType'
             ct_select: 'NULL'
             atlas_type: 'luca'
-            sc_label_key: 'cell_type'
+            sc_label_key: 'luca'
             sc_sample_key: 'batch'
 ```
-Ensure to update the `atlas_type` parameter to `luca` to match the reference dataset with the type of tissue analyzed in the example.
+Ensure to update the `atlas_type` parameter to `luca` to match the reference dataset with the type of tissue analyzed in the example. If you plan to use a different reference dataset, make sure to set up the appropriate refernce dataset name.
 
 ## 6. Run the Analysis
 
