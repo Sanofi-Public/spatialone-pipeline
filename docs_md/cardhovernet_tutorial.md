@@ -50,7 +50,7 @@ Note that this operation may take up to 20 minutes
 
 ## 5. Edit the Configuration Files
 
-Edit the config file located at `./conf/visium_config_flow.yaml` to reflect an appropriate configuration. You'll need to define the pipelines to run, and set up Hovernet & CARD.
+Edit the config file located at `$HOST_DATA_PATH/conf/visium_config_flow.yaml` (in our case `./conf/visium_config_flow.yaml`) to reflect an appropriate configuration. You'll need to define the pipelines to run, and set up Hovernet & CARD.
 
 ### 5.1 Enable All Pipelines
 
