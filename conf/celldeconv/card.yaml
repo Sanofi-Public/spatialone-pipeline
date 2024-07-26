@@ -5,7 +5,7 @@ celldeconv.card:
     min_count_spot : 5 # numeric, include genes where at least this number of spatial locations that have non-zero expression. Default is 5.
     ct_varname: 'cellType' # caracter, the name of the column in sc_meta that specifies the cell type assignment.
     ct_select: 'NULL' # vector of cell type names that you are interested in to deconvolute, default as NULL. If NULL, then use all cell types provided by single cell dataset.
-    atlas_type : 'hlca_new'
+    atlas_type : 'luca'
     sc_label_key : 'cell_type' # the .obs data frame column name defining cell type annotation
     sc_sample_key : 'batch' # this is the 'batch' parameter for CARD
   deployment:
