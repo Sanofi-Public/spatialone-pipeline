@@ -33,7 +33,7 @@ SpatialOne provides docker images for both AMD and ARM architectures. The comput
 
 With the exception of the Hovernet model, SpatialOne can run without a GPU where the cell segmentation (Cellpose) and cell deconvolution (CARD and Cell2Location) run with CPUs. However, the CPU-only approach will significantly increase the execution time. For GPU-based execution, we recommend running SpatialOne using a CUDA-compatible GPU. Lastly, some of the libraries used in SpatialOne rely on PyTorch, which does not ensure reproducibility between CPU and GPU executions. Hence, minor differences should be expected in the cell deconvolution results between CPU and GPU executions.
 
-- **Hardware:**  16 CPU, 192GB RAM, 1 GPU, 100 GB (harddisk and memory requirements may vary depends on wsi image size)
+- **Hardware:**  16 CPU, ~200GB RAM, 1 GPU, 100 GB (harddisk and memory requirements may vary depending on wsi image size; if the weight of the wsi is small the memory requirements can be significantly decreased)
 
 - **Software:** Python 3.9, Docker Engine, (Optional) GPU (CUDA 11)
 
