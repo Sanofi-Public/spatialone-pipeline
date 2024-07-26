@@ -61,7 +61,7 @@ class HoverNet:
         except requests.exceptions.ConnectionError as e:
             logger.info("Connection error occured")
         except requests.exceptions.HTTPError as e:
-            logger.info("HTTP error occured")
+            logger.info("Segmentation failed")
         else:
             logger.info("Success")
 
