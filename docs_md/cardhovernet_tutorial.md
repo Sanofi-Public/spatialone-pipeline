@@ -119,3 +119,13 @@ make docker-start
 ```
 
 By following these steps, you will set up and run a SpatialOne analysis using CARD and Hovernet.
+
+
+## 7. Results Visualization
+The analysis results can be loaded in [TissUUmaps](https://tissuumaps.github.io/) bye loading the `experiment_tmap.tmap` file in the TissUUmaps application (_File --> Open --> select the appropriate file_):
+<img width="1428" alt="image" src="https://github.com/user-attachments/assets/a8b79892-1d71-49ac-af00-17ac0f35b0a8">
+
+Or by checking the html reports stored at `results/experiment_name/reports`
+<img width="1478" alt="image" src="https://github.com/user-attachments/assets/7e14d0f3-1796-4eb7-983a-7d9e75726c70">
+
+
