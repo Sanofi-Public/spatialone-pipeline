@@ -3,7 +3,7 @@ affine==2.3.1
 antlr4-python3-runtime==4.9.3
 attrs==22.2.0
 cachetools==4.2.4
-certifi==2024.2.2
+certifi==2024.7.4
 charset-normalizer==2.0.12
 click==8.0.4
 click-plugins==1.1.1

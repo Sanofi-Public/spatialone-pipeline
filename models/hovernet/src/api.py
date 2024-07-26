@@ -1,5 +1,6 @@
 """ api.py
 """
+import traceback
 from typing import Dict
 
 from fastapi import FastAPI
@@ -60,15 +61,20 @@ async def predict(request: PredictionRequest) -> Dict[str, str]:
 
     logger.info(f"Running HoverNet Inference...")
 
-    image_seg.predict(
-        exp_id,
-        request.input_path,
-        request.output_path,
-        data_io.cache_dir,
-        request.reference_path,
-        request.model_filename,
-        request.type_filename,
-    )
+    try:
+        image_seg.predict(
+            exp_id,
+            request.input_path,
+            request.output_path,
+            data_io.cache_dir,
+            request.reference_path,
+            request.model_filename,
+            request.type_filename,
+        )
+    except Exception as e:
+        logger.exception(traceback.format_exception(None, e, e.__traceback__))
+        logger.error(e)
+        raise e
 
     # Return the prediction as a JSON response
     return {"prediction status": "completed"}

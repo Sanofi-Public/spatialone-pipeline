@@ -31,6 +31,7 @@ COPY . .
 
 # install CARD requirements
 RUN Rscript -e "source('requirements.R')"
+RUN echo "RETICULATE_AUTOCONFIGURE = FALSE" > ~/.Renviron
 
 # Unset all proxy vars
 ENV NO_PROXY=""
