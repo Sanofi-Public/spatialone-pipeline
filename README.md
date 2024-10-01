@@ -1,9 +1,18 @@
 # SpatialOne: Spatial Transcriptomics at Scale
+
+[![Paper](https://img.shields.io/badge/DOI-10.1093%2Fbioinformatics/btae509-orange)](https://doi.org/10.1093/bioinformatics/btae509)
+![GitHub Repo stars](https://img.shields.io/github/stars/Sanofi-Public/spatialone-pipeline)
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)
+[![Docker Image](https://img.shields.io/docker/pulls/albertpla/spatialone_amd.svg)](https://hub.docker.com/r/albertpla/spatialone_amd)
+[![Docker Image](https://img.shields.io/docker/image-size/albertpla/spatialone_amd/latest)](https://hub.docker.com/r/albertpla/spatialone_amd)
+[![License: LICENSE](https://img.shields.io/badge/license-LICENSE.md-purple.svg)](./LICENSE.md)
+
+
+
+
 SpatialOne is an innovative tool designed to streamline the analysis of spatial transcriptomics data generated using platforms such as 10X Genomics Visium. By integrating both image and transcriptomics data, SpatialOne enables comprehensive analysis, combining state-of-the-art methods and pipelines to delve deeply into spatial data. This tool simplifies the complex process of analyzing spatial transcriptomics by offering an end-to-end solution that includes cell segmentation, deconvolution, and spatial structure analysis, ultimately generating detailed HTML reports. These results can be further explored using [TissUUmaps](https://tissuumaps.github.io/TissUUmaps-docs/), an open-source tool for visualizing spatial data.
 
-The accompanying publication for SpatialOne can be found below:
 
-Mena Kamel, Amrut Sarangi, Pavel Senin, Sergio Villordo, Mathew Sunaal, Het Barot, Seqian Wang, Ana Solbas, Luis Cano, Marion Classe, Ziv Bar-Joseph, Albert Pla Planas, SpatialOne: end-to-end analysis of visium data at scale, Bioinformatics, Volume 40, Issue 9, September 2024, btae509, https://doi.org/10.1093/bioinformatics/btae509 
 
 **Key Features:**
 SpatialOne leverages a modular approach to provide flexibility and extensibility in spatial transcriptomics analysis. Users can customize the analysis pipeline by selecting the most appropriate algorithms and parameters for each step. The workflow is designed to be user-friendly, with a low-code interface that allows researchers to produce robust and reproducible results without requiring advanced computational skills. SpatialOne is distributed as a Docker container, ensuring ease of installation and reproducibility across different computing environments. The tool generates comprehensive outputs, including HTML summary reports, CSV files, and AnnData files, which can be visualized interactively using [TissUUmaps](https://tissuumaps.github.io/TissUUmaps-docs/) or analyzed further with standard bioinformatics tools.
@@ -14,6 +23,13 @@ SpatialOne leverages a modular approach to provide flexibility and extensibility
 </div>
 
 This repository also contains the code and dockefiles to replicate the results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and run end-to-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers.
+
+## Citation
+
+If you use SpatialOne, please cite our publication as follows: 
+
+Mena Kamel, Amrut Sarangi, Pavel Senin, Sergio Villordo, Mathew Sunaal, Het Barot, Seqian Wang, Ana Solbas, Luis Cano, Marion Classe, Ziv Bar-Joseph, Albert Pla Planas, SpatialOne: end-to-end analysis of visium data at scale, Bioinformatics, Volume 40, Issue 9, September 2024, btae509, https://doi.org/10.1093/bioinformatics/btae509
+
 
 - [System Requirements](#system-requirements)
 - [Setup](#setup)
