@@ -35,7 +35,7 @@ This repository also contains the code and dockefiles to replicate the results p
 - [Running an Analysis with SpatialOne](#running-an-analysis-with-spatialone)
 - [Visualizing Outputs in TissUUmaps](#visualizing-outputs-in-tisuumaps)
 - [Cell-type Estimation Limitations](#cell-type-estimation-limitations)
-- [Citation](#citation)
+- [Citing SpatialOne](#citing-spatialone)
 - [SpatialOne Tutorials](#spatialone-tutorials)
   - [Reproducing SpatialOne Manuscript Results](#reproducing-spatialone-manuscript-results)
   - [Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample](#analysis-of-10xs-lung-cancer-squamous-cell-carcinoma-sample)
@@ -285,7 +285,7 @@ SpatialOne currently is limited to Visium technology.
 Visium's technology limitations can impact the accuracy of cell abundance estimation, especially for spot-based methods that might involve partially captured cells. This issue is crucial during the cell deconvolution step, where distorted cell proportions can affect results. Similarly, we acknowledge that cell morphology alone cannot be used to accurately identify certain cell types, especially when differentiating between subtypes. The cell type estimation method does not aim to impute gene expression per cell as other methods claim. Given Visium technology limitations, this can lead to unrealistic scenarios. Instead, we provide realistic cell counts and distributions across tissue spots, enabling structural analysis based on cell positioning. Considering the potential error of ±55 µm in cell positioning is due to the Visium spot size, we recommend using cell type estimation to analyze broader areas and not focus on specific spot results. To help users understand labeling accuracy and limitations, SpatialOne includes uncertainty metrics about the cell positioning estimates, such as the relative entropy of the spot, the silhouette scores of clustering, as well as a confidence score that combines both of these measurements.
  As future work, we plan to expand the SpatialOne to support other ST technologies like VisiumHD, Xenium, or CosMx.
 
-# Citation
+# Citing SpatialOne
 
 If you use SpatialOne, please cite our publication as follows: 
 
