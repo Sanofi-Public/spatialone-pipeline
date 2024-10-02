@@ -10,7 +10,7 @@
 
 
 
-SpatialOne is an innovative tool designed to streamline the analysis of spatial transcriptomics data generated using platforms such as 10X Genomics Visium. By integrating both image and transcriptomics data, SpatialOne enables comprehensive analysis, combining state-of-the-art methods and pipelines to delve deeply into spatial data. This tool simplifies the complex process of analyzing spatial transcriptomics by offering an end-to-end solution that includes cell segmentation, deconvolution, and spatial structure analysis, ultimately generating detailed HTML reports. These results can be further explored using [TissUUmaps](https://tissuumaps.github.io/TissUUmaps-docs/), an open-source tool for visualizing spatial data.
+SpatialOne is an innovative tool designed to streamline the analysis of spatial transcriptomics data generated using platforms such as 10X Genomics Visium. By integrating both image and transcriptomics data, SpatialOne enables comprehensive analysis, combining state-of-the-art methods and pipelines to delve deeply into spatial data. This tool simplifies the complex process of analyzing spatial transcriptomics by offering an end-to-end solution that includes cell segmentation, deconvolution, and spatial structure analysis, ultimately generating detailed HTML reports. These results can be further explored using [TissUUmaps](https://tissuumaps.github.io/TissUUmaps-docs/), an open-source tool for visualizing spatial data. See the [SpatialOne publication](https://doi.org/10.1093/bioinformatics/btae509) for further details on its implementation.
 
 
 
@@ -24,13 +24,6 @@ SpatialOne leverages a modular approach to provide flexibility and extensibility
 
 This repository also contains the code and dockefiles to replicate the results present in the paper - _"SpatialOne: End-to-End Analysis of Spatial Transcriptomics at Scale."_ It can be downloaded and run end-to-end spatial transcriptomics analysis on a local or remote machine (cloud agnostic). For reproducibility and distribution purposes SpatialOne is orchestrated via docker containers.
 
-## Citation
-
-If you use SpatialOne, please cite our publication as follows: 
-
-Mena Kamel, Amrut Sarangi, Pavel Senin, Sergio Villordo, Mathew Sunaal, Het Barot, Seqian Wang, Ana Solbas, Luis Cano, Marion Classe, Ziv Bar-Joseph, Albert Pla Planas, SpatialOne: end-to-end analysis of visium data at scale, Bioinformatics, Volume 40, Issue 9, September 2024, btae509, https://doi.org/10.1093/bioinformatics/btae509
-
-
 - [System Requirements](#system-requirements)
 - [Setup](#setup)
   - [Setup Input Data and Configurations](#1-setup-input-data-and-configurations)
@@ -42,6 +35,7 @@ Mena Kamel, Amrut Sarangi, Pavel Senin, Sergio Villordo, Mathew Sunaal, Het Baro
 - [Running an Analysis with SpatialOne](#running-an-analysis-with-spatialone)
 - [Visualizing Outputs in TissUUmaps](#visualizing-outputs-in-tisuumaps)
 - [Cell-type Estimation Limitations](#cell-type-estimation-limitations)
+- [Citation](#citation)
 - [SpatialOne Tutorials](#spatialone-tutorials)
   - [Reproducing SpatialOne Manuscript Results](#reproducing-spatialone-manuscript-results)
   - [Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample](#analysis-of-10xs-lung-cancer-squamous-cell-carcinoma-sample)
@@ -290,6 +284,13 @@ To visualize SpatialOne outputs in TissUUmaps, follow these instructions:
 SpatialOne currently is limited to Visium technology.
 Visium's technology limitations can impact the accuracy of cell abundance estimation, especially for spot-based methods that might involve partially captured cells. This issue is crucial during the cell deconvolution step, where distorted cell proportions can affect results. Similarly, we acknowledge that cell morphology alone cannot be used to accurately identify certain cell types, especially when differentiating between subtypes. The cell type estimation method does not aim to impute gene expression per cell as other methods claim. Given Visium technology limitations, this can lead to unrealistic scenarios. Instead, we provide realistic cell counts and distributions across tissue spots, enabling structural analysis based on cell positioning. Considering the potential error of ±55 µm in cell positioning is due to the Visium spot size, we recommend using cell type estimation to analyze broader areas and not focus on specific spot results. To help users understand labeling accuracy and limitations, SpatialOne includes uncertainty metrics about the cell positioning estimates, such as the relative entropy of the spot, the silhouette scores of clustering, as well as a confidence score that combines both of these measurements.
  As future work, we plan to expand the SpatialOne to support other ST technologies like VisiumHD, Xenium, or CosMx.
+
+# Citation
+
+If you use SpatialOne, please cite our publication as follows: 
+
+Mena Kamel, Amrut Sarangi, Pavel Senin, Sergio Villordo, Mathew Sunaal, Het Barot, Seqian Wang, Ana Solbas, Luis Cano, Marion Classe, Ziv Bar-Joseph, Albert Pla Planas, SpatialOne: end-to-end analysis of visium data at scale, Bioinformatics, Volume 40, Issue 9, September 2024, btae509, https://doi.org/10.1093/bioinformatics/btae509
+
 
 # SpatialOne Tutorials
 
