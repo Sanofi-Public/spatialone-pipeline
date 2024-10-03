@@ -27,6 +27,9 @@ This repository also contains the code and dockefiles to replicate the results p
   - [Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample](#analysis-of-10xs-lung-cancer-squamous-cell-carcinoma-sample)
   - [SpatialOne Analysis using Hovernet and Card](#spatialone-analysis-using-hovernet-and-card)
 
+# Release notes
+Banksy spatial domain analysis is currently not supported by SpatialOne due to licensing incompatibilities.
+
 ## System requirements
 
 SpatialOne provides docker images for both AMD and ARM architectures. The compute requirements depends on the size of the input/experiment data being analyzed (i.e. resolution of microscopy image, size of reference single cell dataset).
@@ -313,4 +316,3 @@ This [tutorial](docs_md/e2e_tutorial.md) provides a step-by-step guide on how to
 ### SpatialOne Analysis using Hovernet and Card
 This [tutorial](docs_md/cardhovernet_tutorial.md) provides a step-by-step guide on how to analyze a [10x sample dataset](https://www.10xgenomics.com/datasets/human-lung-cancer-11-mm-capture-area-ffpe-2-standard) consisting on a FFPE human lung cancer tissue diagnosed with _Neuroendocrine Carcinoma_ using Hovernet & Card as the cell segmentation and cell deconvolution mehtods:
 - [Access tutorial](docs_md/cardhovernet_tutorial.md)
-

@@ -18,9 +18,6 @@ import pandas as pd
 import scanpy as sc
 import SpatialDE
 import squidpy as sq
-from banksy.initialize_banksy import initialize_banksy
-from banksy.run_banksy import run_banksy_multiparam
-from banksy_utils.color_lists import spagcn_color
 from dotenv import load_dotenv
 from omegaconf import OmegaConf
 from PIL import Image
@@ -698,75 +695,6 @@ class SpatialAnalysis:
             ]
         return region_cells_df
 
-    def run_bansky(self, level="tissue"):
-        """Run Bansky - spatial domains analysis.
-
-        Returns:
-        """
-        logger.info(
-            "<spatial_domains_analysis> Running BANSKY spatial domains algorithm"
-        )
-        # Set Bansky parameters
-        params = self.configs["params"][level]
-        run_flag = params[f"bansky_spatial_domains"]
-        if not run_flag or level == "region":
-            return None
-        else:
-            random_seed = params["random_seed"]
-            cluster_algorithm = params["bansky_cluster_algorithm"]
-            np.random.seed(random_seed)
-            random.seed(random_seed)
-            coord_keys = ("array_col", "array_row", "spatial")
-            num_clusters = params["bansky_num_clusters"]
-            resolutions = params["bansky_resolutions"]
-            pca_dims = params["bansky_pca_dims"]
-            lambda_list = params["bansky_lambda_list"]
-            k_geom = params["bansky_k_geom"]
-            max_m = params["bansky_max_m"]
-            nbr_weight_decay = params["bansky_nbr_weight_decay"]
-            # Initialize Bansky
-            output_folder = self.report_directory
-            try:
-                banksy_dict = initialize_banksy(
-                    self.adata_st,
-                    coord_keys,
-                    k_geom,
-                    nbr_weight_decay=nbr_weight_decay,
-                    max_m=max_m,
-                    plt_edge_hist=False,
-                    plt_nbr_weights=False,
-                    plt_agf_angles=False,
-                    plt_theta=False,
-                )
-                results_df = run_banksy_multiparam(
-                    self.adata_st,
-                    banksy_dict,
-                    lambda_list,
-                    resolutions,
-                    color_list=spagcn_color,
-                    max_m=max_m,
-                    filepath=output_folder,
-                    key=coord_keys,
-                    pca_dims=pca_dims,
-                    annotation_key=None,
-                    max_labels=num_clusters,
-                    cluster_algorithm=cluster_algorithm,
-                    match_labels=False,
-                    savefig=False,
-                    add_nonspatial=False,
-                    variance_balance=False,
-                )
-                # Add Bansky labels
-                self.adata_st.obs["banksy_labels"] = results_df.labels.iloc[0].dense
-                sp_domains_adata = self.adata_st
-            except Exception as e:
-                logger.warning(
-                    "<spatial_domains_analysis> Skipping BANSKY spatial domains algorithm due to an error: %s",
-                    e,
-                )
-                sp_domains_adata = None
-            return sp_domains_adata
-
     def run_spatial_analysis(
         self,
         exp_id,
@@ -824,7 +752,6 @@ class SpatialAnalysis:
         spots_adata = self.spatialde_analysis(
             adata=spots_adata, level=level, mode="gene"
         )
-        sp_domains_adata = self.run_bansky(level=level)
 
         # Comparative analysis
         params = self.configs["params"][level]
@@ -862,7 +789,6 @@ class SpatialAnalysis:
             spots_df=spots_df,
             region_name=region_name,
             level=level,
-            sp_domains_adata=sp_domains_adata,
         )
         return report, cells_adata, spots_adata
 
@@ -936,7 +862,6 @@ class SpatialAnalysis:
         spots_df=None,
         region_name=None,
         level="tissue",
-        sp_domains_adata=None,
     ):
         """Calls the methods in report_generator.py to create a spatial structure analysis report.
 
@@ -968,7 +893,6 @@ class SpatialAnalysis:
             cache_path=self.report_directory,
             report_template_path=self.report_template_path,
             scale_factors=self.scale_factors,
-            sp_domains_adata=sp_domains_adata,
         )
         plot_gen.add_qc_report_button(exp_id=exp_id, flow_id=flow_id)
         plot_gen.cell_summary_table(df=spot_stats)
@@ -983,8 +907,6 @@ class SpatialAnalysis:
         plot_gen.morans_i_bar_plot(task_name="morans_cell_bar", mode="cell")
         plot_gen.spatialde_heatmap_plot()
         plot_gen.spatialde_bar_plot()
-        if sp_domains_adata is not None:
-            plot_gen.bansky_domains_plot()
         plot_gen.cooccurrence_plots()
         plot_gen.volcano_plots(task_name="diff_exp_annotations")
         plot_gen.volcano_plots(task_name="diff_exp_clusters")

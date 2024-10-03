@@ -55,5 +55,4 @@ metaflow==2.9.3
 torch==2.3.0
 torchvision==0.18.0
 torchaudio==2.3.0
-banksy-py==0.0.7
 ipython==8.18.1
