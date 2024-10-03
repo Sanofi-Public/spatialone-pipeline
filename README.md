@@ -27,9 +27,6 @@ This repository also contains the code and dockefiles to replicate the results p
   - [Analysis of 10x's Lung Cancer Squamous Cell Carcinoma sample](#analysis-of-10xs-lung-cancer-squamous-cell-carcinoma-sample)
   - [SpatialOne Analysis using Hovernet and Card](#spatialone-analysis-using-hovernet-and-card)
 
-# Release notes
-Banksy spatial domain analysis is currently not supported by SpatialOne due to licensing incompatibilities.
-
 ## System requirements
 
 SpatialOne provides docker images for both AMD and ARM architectures. The compute requirements depends on the size of the input/experiment data being analyzed (i.e. resolution of microscopy image, size of reference single cell dataset).
@@ -49,6 +46,9 @@ SpatialOne has been tested in the following systems:
 - Apple M2 Pro 16 GB Ventura.
 
 Note that for Apple Silicon-based chips, such as the M1 and M2 processors, the docker-ARM image needs to be used. Tests in the Ubuntu and Apple M2 machines were realized with smaller datasets due to their memory limitations.
+
+### Release notes
+Banksy spatial domain analysis is currently not supported by SpatialOne due to licensing incompatibilities.
 
 ## Setup
 
