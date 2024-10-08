@@ -47,6 +47,9 @@ SpatialOne has been tested in the following systems:
 
 Note that for Apple Silicon-based chips, such as the M1 and M2 processors, the docker-ARM image needs to be used. Tests in the Ubuntu and Apple M2 machines were realized with smaller datasets due to their memory limitations.
 
+### Release notes
+Banksy spatial domain analysis is currently not supported by SpatialOne due to licensing incompatibilities.
+
 ## Setup
 
 Before running Spatial One, the following setup steps are required to ensure the pipelines find the paths to data and configs as needed:
@@ -313,4 +316,3 @@ This [tutorial](docs_md/e2e_tutorial.md) provides a step-by-step guide on how to
 ### SpatialOne Analysis using Hovernet and Card
 This [tutorial](docs_md/cardhovernet_tutorial.md) provides a step-by-step guide on how to analyze a [10x sample dataset](https://www.10xgenomics.com/datasets/human-lung-cancer-11-mm-capture-area-ffpe-2-standard) consisting on a FFPE human lung cancer tissue diagnosed with _Neuroendocrine Carcinoma_ using Hovernet & Card as the cell segmentation and cell deconvolution mehtods:
 - [Access tutorial](docs_md/cardhovernet_tutorial.md)
-

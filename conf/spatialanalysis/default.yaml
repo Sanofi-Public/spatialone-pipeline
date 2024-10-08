@@ -4,7 +4,6 @@ spatialanalysis.default:
     non_deconv_label: "not deconvolved"
     morans_save_path: "{marker}-morans-{i}.png"
     spatialde_save_path: "{marker}-spatialde-{i}.png"
-    bansky_save_path: "bansky_analysis.png"
     region_report_name: "{report_name}_report.html"
     tissue:
       # Report Contents
@@ -27,7 +26,6 @@ spatialanalysis.default:
       qc_report: True #Include QC section
       infilt_comparing_cell_types: False #plot infiltration analysis as abundance vs cell types - *Should always be false for tissue analysis*
       infilt_comparing_levels: False #plot infiltration analysis as abundance vs level - *Should always be false for tissue analysis*
-      bansky_spatial_domains: True #plot spatial domains identified by Bansky-py
       # Test Parameters
       n_neighs: 6 #number of neighboring tiles when coord_type is "grid". Number of neighborhoods for non-grid data when coord_type is "generic"
       n_rings: 2 #number of rings of neighbors for grid data.
@@ -45,14 +43,6 @@ spatialanalysis.default:
       diff_pval: 0.05 #significance level to use for gene comparative analysis
       diff_fc_thresh: 3 #fold change threshold to use for gene comparative analysis
       infilt_levels: 4 #number of levels to consider for infiltration analysis
-      bansky_cluster_algorithm: "leiden" #cluster algorithm to use for spatial domains analysis
-      bansky_num_clusters: 7 #number of clusters considered in spatial domains analysis (this number is not really enforced)
-      bansky_resolutions: [.9] # clustering resolution for Leiden clustering
-      bansky_pca_dims: [20] # number of dimensions to keep after PCA
-      bansky_lambda_list: [.8] # lambda parameter for Visium samples
-      bansky_k_geom: 15 # 15 spatial neighbours to be used in spatial domains analysis
-      bansky_max_m: 1 # use AGF for spatial domains analysis
-      bansky_nbr_weight_decay: "scaled_gaussian"
       random_seed: 1234 #random seed for spatial domains analysis
       # Plotting Parameters
       plot_width: 1200 #plot widths
@@ -84,7 +74,6 @@ spatialanalysis.default:
       qc_report: False #Include QC section - *Should always be false for region analysis*
       infilt_comparing_cell_types: True #plot infiltration analysis as abundance vs cell types
       infilt_comparing_levels: True #plot comparison of cell type abundance as a function of distance to boundary
-      bansky_spatial_domains: True #plot spatial domains identified by Bansky-py - *Should always be false for region analysis*
       # Test Parameters
       n_neighs: 6 #number of neighboring tiles when coord_type is "grid". Number of neighborhoods for non-grid data when coord_type is "generic"
       n_rings: 2 #number of rings of neighbors for grid data.
@@ -102,14 +91,6 @@ spatialanalysis.default:
       diff_pval: 0.05 #significance level to use for gene comparative analysis
       diff_fc_thresh: 3 #fold change threshold to use for gene comparative analysis
       infilt_levels: 4 #number of levels to consider for infiltration analysis
-      bansky_cluster_algorithm: "leiden" #cluster algorithm to use for spatial domains analysis
-      bansky_num_clusters: 7 #number of clusters considered in spatial domains analysis (this number is not really enforced)
-      bansky_resolutions: [.9] # clustering resolution for Leiden clustering
-      bansky_pca_dims: [20] # number of dimensions to keep after PCA
-      bansky_lambda_list: [.8] # lambda parameter for Visium samples
-      bansky_k_geom: 15 # 15 spatial neighbours to be used in spatial domains analysis
-      bansky_max_m: 1 # use AGF for spatial domains analysis
-      bansky_nbr_weight_decay: "scaled_gaussian"
       random_seed: 1234 #random seed for spatial domains analysis
       # Plotting Parameters
       plot_width: 1200 #plot widths
@@ -217,11 +198,6 @@ spatialanalysis.default:
         that have proportions significantly different inside the region compared to outside of the region, according to a z-test for proportions.
         Positive distance = distance away from the boundary. Negative distance = distance inside the boundary.
         Cells in the gray region are excluded from the infiltration computation."
-      bansky_spatial_domains:
-        title: "BANSKY - Identification of spatial domains"
-        description: "Spatial map of spot clusters representing tissue domains or regions that have unique gene expression profiles.
-        The BANSKY algorithm identifies clusters on the basis of gene expression patterns, which are then redefined using both gene
-        expression data and spatial coordinates of spots. Spatial domains are shown in different colors."
   tissuumap_templates:
     report_template:
       bucket: "prep"
