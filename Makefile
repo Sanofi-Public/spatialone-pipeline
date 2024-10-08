@@ -36,16 +36,6 @@ install-conda:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-lint:
-	black src/
-	isort src/
-	pylint --fail-under=7 src/
-
-checks:
-	black --check src/
-	isort src/* --check-only
-	pylint --fail-under=7 src/
-
 build:
 	DOCKER_BUILDKIT=1 docker build \
 		--build-arg http_proxy=${HTTP_PROXY} \

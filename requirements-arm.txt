@@ -19,7 +19,6 @@ matplotlib==3.6.2
 numpy==1.22.4
 pandas==1.5.2
 patchify==0.2.3
-pylint==2.15.10
 pytest-cov==4.0.0
 pytest-mock==3.10.0
 pytest==7.2.0
