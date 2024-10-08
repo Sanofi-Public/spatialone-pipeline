@@ -41,7 +41,6 @@ class PlotGenerator:
         cache_path="",
         report_template_path="",
         scale_factors=None,
-        sp_domains_adata=None,
     ):
         """Initializing PlotGenerator instance variables.
 
@@ -63,7 +62,6 @@ class PlotGenerator:
         self.fig_configs = self.configs["params"]["fig_configs"]
         self.inline_figs = []
         self.report_gen = ReportGenerator(report_template_path)
-        self.sp_domains_adata = sp_domains_adata
 
     def convert_micron(self, pix_distance, spot_size=65.0):
         """
@@ -1049,35 +1047,6 @@ class PlotGenerator:
             configs["figure"] = self.report_gen.format_to_html(fig)
             self.inline_figs.append(configs)
         return fig, infiltrating_cells
-
-    def bansky_domains_plot(self):
-        self.sp_domains_adata.obs["banksy_spatial_domains"] = [
-            "dom_" + str(i) for i in self.sp_domains_adata.obs["banksy_labels"]
-        ]
-        fig, ax = plt.subplots(figsize=(self.width // 100, self.height // 100))
-        # Generate the spatial scatter plot and save it temporarily
-        save_location = self.cache_path + self.configs["params"]["bansky_save_path"]
-        save_path = save_location.format(marker="banksy_spatial_domains")
-        save_path = os.path.join(os.getcwd(), save_path)
-        sq.pl.spatial_scatter(
-            self.sp_domains_adata, color=["banksy_spatial_domains"], save=save_path
-        )
-        # Read the saved plot and display it in the subplot
-        spatial_domain_plot = plt.imread(save_path)
-        ax.imshow(spatial_domain_plot)
-        ax.set_axis_off()
-        ax.set_aspect("equal")
-        # Remove the temporary file
-        os.remove(save_path)
-        # Adjust layout
-        fig.tight_layout(pad=0.1)
-        task_name = "bansky_spatial_domains"
-        configs = dict(self.fig_configs[task_name])
-        configs["figure"] = self.report_gen.format_to_html(fig)
-        configs["data"] = self.sp_domains_adata.obs
-        configs["name"] = task_name
-        self.inline_figs.append(configs)
-        return fig
 
     def get_report(self, exp_id, report_name):
         """Populates the report

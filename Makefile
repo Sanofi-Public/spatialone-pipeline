@@ -36,16 +36,6 @@ install-conda:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-lint:
-	black src/
-	isort src/
-	pylint --fail-under=7 src/
-
-checks:
-	black --check src/
-	isort src/* --check-only
-	pylint --fail-under=7 src/
-
 build:
 	DOCKER_BUILDKIT=1 docker build \
 		--build-arg http_proxy=${HTTP_PROXY} \
@@ -93,11 +83,6 @@ clean:
 	find ./ -name "*~" | xargs rm -v || :
 	find ./ -name "*.pyc" | xargs rm -v || :
 	find ./ -name "__pycache__" | xargs rm -rf || :
-
-sphinx-docs:
-	sphinx-apidoc -o docs .
-	sphinx-build docs _build
-	tar -zcvf file.tar.gz _build
 
 run-spatialone:
 	python3 -m src.pipelines.visium_flow --no-pylint run
