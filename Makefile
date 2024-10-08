@@ -94,11 +94,6 @@ clean:
 	find ./ -name "*.pyc" | xargs rm -v || :
 	find ./ -name "__pycache__" | xargs rm -rf || :
 
-sphinx-docs:
-	sphinx-apidoc -o docs .
-	sphinx-build docs _build
-	tar -zcvf file.tar.gz _build
-
 run-spatialone:
 	python3 -m src.pipelines.visium_flow --no-pylint run
 
