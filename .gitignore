@@ -18,3 +18,4 @@ prep/*
 results*
 conf/cpu/*
 conf/gpu/*
+*.crt

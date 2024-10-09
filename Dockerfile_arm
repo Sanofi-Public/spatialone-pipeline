@@ -2,16 +2,7 @@
 FROM --platform=linux/arm64 ubuntu:22.04
 
 # Set environment variables to non-interactive to avoid prompts during build
-ARG NO_PROXY
-ARG HTTP_PROXY
-ARG HTTPS_PROXY
-ENV NO_PROXY=${NO_PROXY}
-ENV HTTP_PROXY=${HTTP_PROXY}
-ENV HTTPS_PROXY=${HTTPS_PROXY}
-ENV http_proxy=${HTTP_PROXY}
-ENV https_proxy=${HTTPS_PROXY}
 ENV DEBIAN_FRONTEND=noninteractive
-
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/archives/lock && rm -rf /var/lib/dpkg/lock \
     && apt-get update \
@@ -57,13 +48,6 @@ COPY templates/ /app/templates/
 RUN make install-arm
 RUN pip install numpy --upgrade --user
 RUN pip install numba --upgrade --user
-
-# Unset all proxy vars
-ENV NO_PROXY=""
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
-ENV http_proxy=""
-ENV https_proxy=""
 
 # Expose port 80 for the application
 EXPOSE 80

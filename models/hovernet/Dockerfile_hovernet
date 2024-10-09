@@ -1,16 +1,5 @@
 FROM nvidia/cuda:11.8.0-base-ubuntu20.04
 
-#TODO are these needed for external users? probably not
-ARG NO_PROXY
-ARG HTTP_PROXY
-ARG HTTPS_PROXY
-
-ENV NO_PROXY=${NO_PROXY}
-ENV HTTP_PROXY=${HTTP_PROXY}
-ENV HTTPS_PROXY=${HTTPS_PROXY}
-ENV http_proxy=${HTTP_PROXY}
-ENV https_proxy=${HTTPS_PROXY}
-
 # setup working directory
 WORKDIR /app
 RUN mkdir cache/
@@ -20,10 +9,11 @@ COPY . .
 ENV DEBIAN_FRONTEND=noninteractive
 
 # install libraries
-RUN apt-get update && apt-get install -y wget
+RUN apt-get clean && apt-get update
+RUN apt-get install -y wget
 RUN apt-get install -y git-all
 RUN apt install -y build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-RUN apt update && apt install -y openslide-tools libncurses-dev libgdbm-dev libz-dev tk-dev libsqlite3-dev libreadline-dev liblzma-dev libffi-dev libssl-dev
+RUN apt install -y openslide-tools libncurses-dev libgdbm-dev libz-dev tk-dev libsqlite3-dev libreadline-dev liblzma-dev libffi-dev libssl-dev
 RUN apt install -y libvips
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
@@ -33,7 +23,8 @@ RUN apt-get install -y python3-pip
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install -r requirements-hovernet.txt
 
-RUN python3 -m pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118
+RUN python3 -m pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118 --trusted-host download.pytorch.org
+
 # enable output back
 ENV DEBIAN_FRONTEND=
 EXPOSE 80
@@ -42,12 +33,4 @@ EXPOSE 80
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-# Unset all proxy vars
-ENV NO_PROXY=""
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
-ENV http_proxy=""
-ENV https_proxy=""
-
 CMD ["uvicorn", "src.api:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "80"]
-#CMD ["tail", "-f", "/dev/null"]

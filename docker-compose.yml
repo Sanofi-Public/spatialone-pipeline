@@ -4,10 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - HTTPS_PROXY=${HTTPS_PROXY}
-        - HTTP_PROXY=${HTTP_PROXY}
-
     platform: linux/amd64
     volumes:
       - ${HOST_DATA_PATH}:/app/data
@@ -23,12 +19,7 @@ services:
               capabilities: [gpu]
 
   card:
-    build:
-      context: ./models/card
-      dockerfile: Dockerfile_card
-      args:
-        - HTTPS_PROXY=${HTTPS_PROXY}
-        - HTTP_PROXY=${HTTP_PROXY}
+    image: albertplaplanas/card-api:latest
     platform: linux/amd64
     volumes:
       - ${HOST_DATA_PATH}:/app/data
@@ -43,9 +34,6 @@ services:
     build:
       context: ./models/hovernet
       dockerfile: Dockerfile_hovernet
-      args:
-        - HTTPS_PROXY=${HTTPS_PROXY}
-        - HTTP_PROXY=${HTTP_PROXY}
     platform: linux/amd64
     volumes:
       - ${HOST_DATA_PATH}:/app/data
