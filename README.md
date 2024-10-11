@@ -221,11 +221,6 @@ GPU_DEVICE_ID = 0
 - **HOST_DATA_PATH**: This is the absolute path for where the data and configs will be stored for running Spatial One. Please ensure the path name convention above is followed exactly.
 - **GPU_DEVICE_ID**: This defines the ID of the GPU that will be used to run the analysis (nvidia-smi command can help determine the device ID). For a single GPU, it is likely that the device ID is zero.
 
-(Optional) In case you are using proxies, export them as environmental variables:
-
-    export HTTP_PROXY="<proxy_values>"
-    export HTTPS_PROXY="<proxy_values>"
-
 ### 3. Building Docker images
 
 Docker compose is used to orchestrate the build and run of the required docker images for SpatialOne: main-pipeline, Card, Hovernet. To build all required docker images, run the following command:
