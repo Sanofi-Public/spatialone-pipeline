@@ -2,7 +2,7 @@
 
 For this tutorial, we assume the user is using the following path and has Docker properly set up: `/home/user/card_demo`. It is also assumed that the user has access to a machine with a GPU and the right memory set up.
 
-## 1. Retrieve the Code
+## 1. Retrieve SpatailOne's Code
 Donwload the code from the github repository
 ```bash
 git clone https://github.com/Sanofi-Public/spatialone-pipeline.git
@@ -122,7 +122,7 @@ By following these steps, you will set up and run a SpatialOne analysis using CA
 
 
 ## 7. Results Visualization
-The analysis results can be loaded in [TissUUmaps](https://tissuumaps.github.io/) bye loading the `experiment_tmap.tmap` file in the TissUUmaps application (_File --> Open --> select the appropriate file_):
+The analysis results can be loaded in [TissUUmaps](https://tissuumaps.github.io/) by loading the `experiment_tmap.tmap` file in the TissUUmaps application (_File --> Open --> select the appropriate file_):
 <img width="1428" alt="image" src="https://github.com/user-attachments/assets/a8b79892-1d71-49ac-af00-17ac0f35b0a8">
 
 Or by checking the html reports stored at `results/experiment_name/reports`
