@@ -2,7 +2,7 @@
 
 For this tutorial, we assume the user is using the following path and has Docker properly set up: `/home/user/card_demo`. It is also assumed that the user has access to a machine with a GPU and the right memory set up.
 
-## 1. Retrieve SpatailOne's Code
+## 1. Retrieve SpatialOne's Code
 Donwload the code from the github repository
 ```bash
 git clone https://github.com/Sanofi-Public/spatialone-pipeline.git
